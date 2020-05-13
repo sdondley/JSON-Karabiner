@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Conditions:Input_Source_if';
+use parent 'JSON::Karabiner::Manipulator::Conditions::Input_source_if';
 
 
 # ABSTRACT: action for input_source_if condition

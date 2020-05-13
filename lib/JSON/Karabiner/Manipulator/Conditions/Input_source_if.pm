@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Conditions:Device_if';
+use parent 'JSON::Karabiner::Manipulator::Conditions::Device_if';
 
 sub new {
   my $class = shift;
