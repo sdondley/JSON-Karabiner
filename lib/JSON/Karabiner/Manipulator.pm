@@ -14,17 +14,34 @@ sub new {
 sub add_definition {
   my $s = shift;
   my $type = shift;
-  croak 'To add a definition, you must tell me which kind you\' like to add' if !$type;
+  croak 'To add a definition, you must tell me which kind you\'d like to add' if !$type;
 
   my $uctype = ucfirst($type);
   my $package = "JSON::Karabiner::Manipulator::Definitions::" . $uctype;
   eval "require $package";
-  my $definition = $package->new($type, 'root');
+  my $definition = $package->new($type);
   my %hash = %{$s->{definitions}};
   $type = $definition->{def_name};
   $hash{$type} = $definition->{data};
   $s->{definitions} = \%hash;
   return $definition;
+}
+
+sub add_condition {
+  my $s = shift;
+  my $type = shift;
+  croak 'To add a condition, you must tell me which kind you\'d like to add' if !$type;
+
+  my $uctype = ucfirst($type);
+  my $package = "JSON::Karabiner::Manipulator::Conditions::" . $uctype;
+  eval "require $package";
+  my $condition = $package->new($type);
+  if (defined $s->{definitions}{conditions}) {
+    push @{$s->{definitions}{conditions}}, $condition;
+  } else {
+    $s->{definitions}{conditions} = [ $condition ];
+  }
+  return $condition;
 }
 
 sub TO_JSON {

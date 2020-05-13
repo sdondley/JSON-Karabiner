@@ -17,4 +17,9 @@ do 't/utility_funcs.pl';
 my $tests = 20; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
-run_to_tests('to');
+
+my ($obj, $def) = gen_def('to_delayed_if_invoked');
+run_to_tests('to_delayed_if_invoked');
+
+
+$obj->_dump_json;

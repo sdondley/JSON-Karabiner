@@ -1,4 +1,4 @@
-package JSON::Karabiner::Manipulator::Definitions ;
+package JSON::Karabiner::Manipulator::Conditions ;
 
 use strict;
 use warnings;
@@ -12,47 +12,26 @@ sub new {
 
   my $self = {
     def_name => $type,
-    consumer_key_code => 0,
-    pointing_button => 0,
-    key_code => 0,
-    any => 0,
-    last_key_code => '',
 
   };
   bless $self, $class;
   return $self;
 }
 
-sub add_consumer_key_code {
-  my $s = shift;
-  croak 'You must pass a value' if !$_[0];
-  $s->add_key_code(@_, 'consumer_key_code');
-}
-
-sub add_pointing_button {
-  my $s = shift;
-  croak 'You must pass a value' if !$_[0];
-  $s->add_key_code(@_, 'pointing_button');
-}
-
-sub _is_exclusive {
-  my $s = shift;
-  my $property = shift;
-  croak 'No property passed' unless $property;
-#  my $is_exclusive = !grep { !$s->{$_} unless $_ eq $property } qw(shell_command select_input_source set_variable mouse_key consumer_key_code pointing_button key_code);
-#  croak 'Property already set that conflicts with the propert you are trying to set' unless $is_exclusive;
-  $s->{$property} = 1;
-}
-
 sub TO_JSON {
   my $obj = shift;
-#  use Data::Dumper qw(Dumper);
-#  print Dumper $obj;
+  use Data::Dumper qw(Dumper);
   my $name = $obj->{def_name};
   my $value = $obj->{data};
-  return { $name => $value };
+  my @data_hash = @{$obj->{data}};
+  my %super_hash = ();
+  foreach my $hash (@data_hash) {
+    my %hash = %$hash;
+    %super_hash = (%super_hash, %hash);
+  }
+  %super_hash = (%super_hash, type => $name);
+  return { %super_hash };
 
-  # return { %{ shift() } };
 }
 
 # ABSTRACT: turns baubles into trinkets
