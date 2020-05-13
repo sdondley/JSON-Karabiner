@@ -1,1 +1,71 @@
-Initial commit
+# NAME
+
+JSON::Karabiner - easy JSON code generaation for Karbiner-Elements
+
+# VERSION
+
+version 0.001
+
+# SYNOPSIS
+
+    use JSON::Karabiner;
+
+# DESCRIPTION
+
+# REQUIRES
+
+- [Carp](https://metacpan.org/pod/Carp)
+- [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
+- [JSON](https://metacpan.org/pod/JSON)
+- [JSON::Karabiner::Rule](https://metacpan.org/pod/JSON::Karabiner::Rule)
+- [strict](https://metacpan.org/pod/strict)
+- [warnings](https://metacpan.org/pod/warnings)
+
+# SUPPORT
+
+## Perldoc
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc JSON::Karabiner
+
+## Websites
+
+The following websites have more information about this module, and may be of help to you. As always,
+in addition to those websites please use your favorite search engine to discover more resources.
+
+- MetaCPAN
+
+    A modern, open-source CPAN search engine, useful to view POD in HTML format.
+
+    [https://metacpan.org/release/JSON-Karabiner](https://metacpan.org/release/JSON-Karabiner)
+
+## Source Code
+
+The code is open to the world, and available for you to hack on. Please feel free to browse it and play
+with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
+from your repository :)
+
+[https://github.com/sdondley/JSON-Karabiner](https://github.com/sdondley/JSON-Karabiner)
+
+    git clone git://github.com/sdondley/JSON-Karabiner.git
+
+# BUGS AND LIMITATIONS
+
+You can make new bug reports, and view existing ones, through the
+web interface at [http://rt.cpan.org](http://rt.cpan.org).
+
+# INSTALLATION
+
+See perlmodinstall for information and options on installing Perl modules.
+
+# AUTHOR
+
+Steve Dondley <s@dondley.com>
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2020 by Steve Dondley.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
