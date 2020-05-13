@@ -14,7 +14,7 @@ use JSON::Karabiner;
 
 
 
-my $tests = 2; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 5; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
 
@@ -25,5 +25,3 @@ lives_ok { $obj->create_rule('some rule'); } 'can create rule';
 dies_ok { $obj->create_rule() } 'rules require names';
 throws_ok { $obj->create_rule() } qr/No description passed/, 'throws correct error when no name passed';
 is_deeply $obj->{_karabiner}, {title => 'some_title', rules => [ { description => 'some rule', manipulators => [] } ]}, 'rule get added to karabiner object';
-
-
