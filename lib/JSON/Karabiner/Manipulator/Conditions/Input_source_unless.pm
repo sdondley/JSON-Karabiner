@@ -7,7 +7,7 @@ use Carp;
 use parent 'JSON::Karabiner::Manipulator::Conditions::Input_source_if';
 
 
-# ABSTRACT: action for input_source_if condition
+# ABSTRACT: definition for input_source_if condition
 
 1;
 

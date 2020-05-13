@@ -37,7 +37,7 @@ sub add_description {
   push @{$s->{data}}, { description => $desc };
 
 }
-# ABSTRACT: action for Frontmost_application_if condition
+# ABSTRACT: definition for Frontmost_application_if condition
 
 1;
 

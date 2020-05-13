@@ -6,7 +6,7 @@ use JSON;
 use Carp;
 use parent 'JSON::Karabiner::Manipulator::Conditions::Device_if';
 
-# ABSTRACT: action for device_unless condition
+# ABSTRACT: definition for device_unless condition
 
 1;
 

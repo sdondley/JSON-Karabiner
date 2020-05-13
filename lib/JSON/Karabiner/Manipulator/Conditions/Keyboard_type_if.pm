@@ -39,7 +39,7 @@ sub TO_JSON {
   return { %super_hash };
 
 }
-#ABSTRACT: action for keyboard_type_if condition
+#ABSTRACT: definition for keyboard_type_if condition
 
 1;
 

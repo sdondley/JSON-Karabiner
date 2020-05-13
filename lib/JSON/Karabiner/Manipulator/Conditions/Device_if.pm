@@ -42,7 +42,7 @@ sub TO_JSON {
   return { %super_hash };
 
 }
-# ABSTRACT: action for Frontmost_application_if condition
+# ABSTRACT: definition for Frontmost_application_if condition
 
 1;
 

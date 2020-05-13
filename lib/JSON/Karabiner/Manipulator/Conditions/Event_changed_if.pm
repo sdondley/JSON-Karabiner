@@ -24,7 +24,7 @@ sub add_value {
 
 }
 
-# ABSTRACT: action for event_changed_if condition
+# ABSTRACT: definition for event_changed_if condition
 
 1;
 

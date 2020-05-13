@@ -7,7 +7,7 @@ use Carp;
 use parent 'JSON::Karabiner::Manipulator::Conditions::Frontmost_application_if';
 
 
-# ABSTRACT: action for Frontmost_application_unless condition
+# ABSTRACT: definition for Frontmost_application_unless condition
 
 1;
 
