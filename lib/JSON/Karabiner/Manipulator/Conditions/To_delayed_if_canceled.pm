@@ -1,10 +1,10 @@
-package JSON::Karabiner::Manipulator::Definitions::To_delayed_if_canceled ;
+package JSON::Karabiner::Manipulator::Actions::To_delayed_if_canceled ;
 
 use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Definitions::To';
+use parent 'JSON::Karabiner::Manipulator::Actions::To';
 
 sub new {
   my $class = shift;
@@ -22,7 +22,7 @@ sub new {
   return $obj;
 }
 
-# ABSTRACT: to_delayed_if_canceled definition
+# ABSTRACT: to_delayed_if_canceled action
 
 1;
 

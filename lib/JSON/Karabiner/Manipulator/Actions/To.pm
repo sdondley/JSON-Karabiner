@@ -1,10 +1,10 @@
-package JSON::Karabiner::Manipulator::Definitions::To ;
+package JSON::Karabiner::Manipulator::Actions::To ;
 
 use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Definitions';
+use parent 'JSON::Karabiner::Manipulator::Actions';
 
 sub new {
   my $class = shift;
@@ -141,7 +141,7 @@ sub add_modifiers {
 }
 
 
-# ABSTRACT: To definition
+# ABSTRACT: To action
 
 1;
 

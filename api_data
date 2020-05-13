@@ -1,6 +1,6 @@
 my @modifiers =  qw (caps_lock left_command left_control left_option left_shift right_command right_control right_option right_shift fn command control option shift left_alt left_gui right_alt right_gui) ;
 
-my %definitions = (
+my %actions = (
   type => { type => 'value', allowed_values => [ 'basic', 'mouse_motion_to_scroll' ], default => 'basic', required => 1 },
   from => { required => 1,
             type => 'hash',

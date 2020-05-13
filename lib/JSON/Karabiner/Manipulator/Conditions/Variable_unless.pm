@@ -6,7 +6,7 @@ use JSON;
 use Carp;
 use parent 'JSON::Karabiner::Manipulator::Conditions::Variable_if';
 
-# ABSTRACT: definition variable_unless condition
+# ABSTRACT: action variable_unless condition
 
 1;
 

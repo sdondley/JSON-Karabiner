@@ -1,10 +1,10 @@
-package JSON::Karabiner::Manipulator::Definitions::From ;
+package JSON::Karabiner::Manipulator::Actions::From ;
 
 use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Definitions';
+use parent 'JSON::Karabiner::Manipulator::Actions';
 
 
 sub new {
@@ -42,7 +42,7 @@ sub add_key_code {
   croak 'Specifiers such as lazy, repeat, halt, and hold_down_in_milliseconds do not apply in "from" defintions'
     if $letter_code || $ms;
   if (exists $s->{data}{$input_type}) {
-    croak 'From definition already has that property';
+    croak 'From action already has that property';
   }
   $s->{from}{$input_type} = $key_codes[0];
 
@@ -69,7 +69,7 @@ sub _add_modifiers {
   my $s = shift;
   my $mod_type = shift;
   my $values = \@_;
-  croak "This definition already has $mod_type modifiers" if $s->{"has_${mod_type}_modifiers"};
+  croak "This action already has $mod_type modifiers" if $s->{"has_${mod_type}_modifiers"};
 
   $s->{data}{modifers}{$mod_type} = \@_;
   $s->{"has_${mod_type}_modifiers"} = 1;

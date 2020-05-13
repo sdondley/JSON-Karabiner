@@ -6,25 +6,25 @@ use Carp;
 
 sub new {
   my $class = shift;
-  my $self = { definitions => {} };
+  my $self = { actions => {} };
   bless $self, $class;
   return $self;
 }
 
-sub add_definition {
+sub add_action {
   my $s = shift;
   my $type = shift;
-  croak 'To add a definition, you must tell me which kind you\'d like to add' if !$type;
+  croak 'To add a action, you must tell me which kind you\'d like to add' if !$type;
 
   my $uctype = ucfirst($type);
-  my $package = "JSON::Karabiner::Manipulator::Definitions::" . $uctype;
+  my $package = "JSON::Karabiner::Manipulator::Actions::" . $uctype;
   eval "require $package";
-  my $definition = $package->new($type);
-  my %hash = %{$s->{definitions}};
-  $type = $definition->{def_name};
-  $hash{$type} = $definition->{data};
-  $s->{definitions} = \%hash;
-  return $definition;
+  my $action = $package->new($type);
+  my %hash = %{$s->{actions}};
+  $type = $action->{def_name};
+  $hash{$type} = $action->{data};
+  $s->{actions} = \%hash;
+  return $action;
 }
 
 sub add_condition {
@@ -36,17 +36,17 @@ sub add_condition {
   my $package = "JSON::Karabiner::Manipulator::Conditions::" . $uctype;
   eval "require $package";
   my $condition = $package->new($type);
-  if (defined $s->{definitions}{conditions}) {
-    push @{$s->{definitions}{conditions}}, $condition;
+  if (defined $s->{actions}{conditions}) {
+    push @{$s->{actions}{conditions}}, $condition;
   } else {
-    $s->{definitions}{conditions} = [ $condition ];
+    $s->{actions}{conditions} = [ $condition ];
   }
   return $condition;
 }
 
 sub TO_JSON {
   my $obj = shift;
-  return $obj->{definitions};
+  return $obj->{actions};
 }
 
 

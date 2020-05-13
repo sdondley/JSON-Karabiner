@@ -1,10 +1,10 @@
-package JSON::Karabiner::Manipulator::Definitions::To_if_held_down ;
+package JSON::Karabiner::Manipulator::Actions::To_if_held_down ;
 
 use strict;
 use warnings;
 use JSON;
 use Carp;
-use parent 'JSON::Karabiner::Manipulator::Definitions::To';
+use parent 'JSON::Karabiner::Manipulator::Actions::To';
 
 sub new {
   my $class = shift;
@@ -14,7 +14,7 @@ sub new {
   return $obj;
 }
 
-# ABSTRACT: to_if_alone definition
+# ABSTRACT: to_if_alone action
 
 1;
 
