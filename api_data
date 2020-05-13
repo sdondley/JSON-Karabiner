@@ -1,0 +1,44 @@
+my @modifiers =  qw (caps_lock left_command left_control left_option left_shift right_command right_control right_option right_shift fn command control option shift left_alt left_gui right_alt right_gui) ;
+
+my %actions = (
+  type => { type => 'value', allowed_values => [ 'basic', 'mouse_motion_to_scroll' ], default => 'basic', required => 1 },
+  from => { required => 1,
+            type => 'hash',
+            allowed_keys => { key_code          => {type => 'value'},
+                              consumer_key_code => {type => 'value'},
+                              pointing_button   => {type => 'value'},
+                              any               => {type => 'value'},
+                              modifiers         => {type => 'hash', allowed_keys => { mandatory => { type => 'array', allowed_values => \@modifiers },
+                                                                                      optional =>  { type => 'array', allowed_values => \@modifiers } } },
+                              simultaneous      => {type => 'array', required => 0,
+                                                    allowed_values => { type => 'hash',
+                                                      allowed_keys => { 'key_code' => { type => 'value' },
+                                                                        'consumer_key_code' => { type => 'value' },
+                                                                        'any' => { type => 'value' },
+                                                                        'pointing_button' => { type => 'value' } } } },
+                              simultaneous_options => { type => 'hash', required => 0, allowed_keys => { detect_key_down_uinterruptedly => { type => 'value' },
+                                                                                                         key_down_order => { type => 'value'},
+                                                                                                         key_up_when => { type => 'value' },
+                                                                                                         to_after_key_up => { type => 'value'  } } } } },
+  to   => { type => 'array',
+            allowed_values => { type => 'hash',
+                                allowed_keys => {
+                                  key_code          => { type => 'value' },
+                                  consumer_key_code => { type => 'value' },
+                                  pointing_button   => { type => 'value' },
+                                  shell_command     => { type => 'value' },
+                                  select_input_source => { type => 'hash', allowed_keys => { language => { type => 'value' }, input_source_id => { type => 'value' }, input_mode_id => { type => 'value' } } },
+                                  set_variable => { type => 'hash', allowed_keys => { name => { required => 1 }, value => { required => 1 } } },
+                                  mouse_key => { allowed_keys => {
+                                              x => {type => 'value'},
+                                              y => {type => 'value'},
+                                              vertical_wheel => { type => 'value'},
+                                              horizontal_wheel => { type => 'value' },
+                                              speed_multiplier => { type => 'value' } } },
+                                  modifiers => { type => 'array', allowed_values => \@modifiers },
+                                  lazy => { type => 'boolean' },
+                                  repeat => { type => 'boolean' },
+                                },
+                              }
+          } );
+
