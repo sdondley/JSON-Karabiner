@@ -32,4 +32,3 @@ lives_ok { $def->add_simultaneous('key_code', 'a', 'b', 'c') } 'can add simultan
 lives_ok { $def->add_simultaneous('consumer_key_code', 'a', 'b', 'c') } 'can add simultaneous';
 
 $obj->_dump_json;
-

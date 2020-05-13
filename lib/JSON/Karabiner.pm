@@ -79,7 +79,7 @@ sub _dump_json {
 }
 
 
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: easy JSON code generaation for Karbiner-Elements
 
 1;
 

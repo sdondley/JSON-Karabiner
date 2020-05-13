@@ -2,9 +2,7 @@ package JSON::Karabiner::Manipulator ;
 
 use strict;
 use warnings;
-use JSON::Karabiner::Manipulator::Definitions;
 use Carp;
-
 
 sub new {
   my $class = shift;
@@ -18,10 +16,13 @@ sub add_definition {
   my $type = shift;
   croak 'To add a definition, you must tell me which kind you\' like to add' if !$type;
 
-  my $definition = JSON::Karabiner::Manipulator::Definitions->new($type, 'root');
+  my $uctype = ucfirst($type);
+  my $package = "JSON::Karabiner::Manipulator::Definitions::" . $uctype;
+  eval "require $package";
+  my $definition = $package->new($type, 'root');
   my %hash = %{$s->{definitions}};
   $type = $definition->{def_name};
-  $hash{$type} = $definition->{$type};
+  $hash{$type} = $definition->{data};
   $s->{definitions} = \%hash;
   return $definition;
 }
