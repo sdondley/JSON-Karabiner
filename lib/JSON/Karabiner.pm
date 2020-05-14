@@ -182,7 +182,6 @@ if you need asssistance.
 
   # Tell the "from" action what to do
   $from->add_simultaneous('a', 's', 'd');
-  $from->add_optional_modifiers('any');
 
   # Tell the "to" action what to do
   $to->add_key_code('spacebar');
