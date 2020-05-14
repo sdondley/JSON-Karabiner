@@ -1,6 +1,7 @@
 /MANIFEST.SKIP
 /JSON-Karabiner-*
 /tmp
+/test.pl
 !*/tmp
 *~
 *.swp
