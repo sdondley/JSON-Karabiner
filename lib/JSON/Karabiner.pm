@@ -191,6 +191,8 @@ found at:
 
 =item L<conditions|JSON::Karabiner::Manipulator::Conditions>
 
+=back
+
 But the best way to learn, of course, is to experiment and see what happens.
 
 =head1 METHODS
