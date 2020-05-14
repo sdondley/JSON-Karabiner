@@ -134,7 +134,7 @@ you write. If you get errors about lack of permissions, try running:
   sudo cpanm JSON::Karabiner
 
 If you still get weird errors, it may be a bug. Please report your issue to the
-L<issue queue|https://github.com/sdondley/JSON-Karabiner/issues>
+L<issue queue|https://github.com/sdondley/JSON-Karabiner/issues>.
 
 =head4 Other install methods
 
@@ -155,15 +155,15 @@ what it will do. Don't hesitate to L<file an issue|https://github.com/sdondley/J
 if you need asssistance.
 
   #!/usr/bin/env perl   # shebang line so this program is opened with perl interpreter
-  use JSON::Karabiner;  # make sure this Perl package is installed on your machine
+  use JSON::Karabiner;  # The JSON::Karabiner Perl package must be installed on your machine
 
   use strict;    # always set these in perl for your
   use warnings;  # own sanity
 
-  # Create an object by passiing it a title and the name of the file you will write to:
+  # Create an object by passing it a title and the name of the file you will write to:
   my $kb_obj = JSON::Karabiner->new('Typing assists', 'my_awesome_karbiner_mod.json');
 
-  # Now add a rule and give it description:
+  # Now add a rule and give it a description:
   my $rule = $kb_obj->add_rule('a-s-d to show character viewer');
 
   # Add a manipulator to the rule:
@@ -221,15 +221,15 @@ There are three important methods to know:
 
 =over 4
 
-=item add_action method
+=item C<add_action> method
 
 for adding the from/to actions to the Karbiner manipulator data structure
 
-=item add_condition method
+=item C<add_condition> method
 
 for adding condtions to the manipulator structure
 
-=item add_parameters method
+=item C<add_parameters> method
 
 for adding parameters to the manipulator data structure
 
@@ -238,8 +238,7 @@ for adding parameters to the manipulator data structure
 It will be very helpful if you have a basic familiarity with the Karbiner manipulator
 definition. See the L<Karabiner complex_modification manipulator documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/> for more information.
 
-The documentation below is not exhaustive. You'll also need to consult the documenation
-found at:
+The documentation below is not exhaustive. You'll also need to consult the documentation at:
 
 =over 4
 
@@ -250,6 +249,8 @@ found at:
 =item L<conditions|JSON::Karabiner::Manipulator::Conditions>
 
 =back
+
+These pages document the methods for actions and conditions.
 
 But the best way to learn, of course, is to experiment and see what happens.
 
