@@ -1,5 +1,10 @@
 Revision history for JSON-Karabiner
 
+0.007
+  - add validity checks to ensure 'from' actions exists and is populated
+  - add mechanism for turning off validity checks
+  - create _fake_write_file method for testing
+
 0.006     2020-05-14 15:52:31-04:00 America/New_York
   - add check on directory where file is to be saved
   - fixed critical typo that created bad json property
