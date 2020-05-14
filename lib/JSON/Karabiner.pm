@@ -24,6 +24,7 @@ sub new {
     _file => $file,
     _mod_file_dir => $opts->{mod_file_dir} || "$ENV{HOME}/.config/karabiner/assets/complex_modifications/",
     _karabiner => { title => $title, rules => [] },
+    _fake_write_flag => 0,
   };
   if (!-d $self->{_mod_file_dir}) {
     if ($opts->{_mod_file_dir}) {
@@ -36,6 +37,13 @@ sub new {
   return $self;
 }
 
+# used by test scripts
+sub _fake_write_file {
+  my $s = shift;
+  $s->{_fake_write_flag} = 1;
+  $s->write_file;
+}
+
 sub write_file {
   my $s = shift;
   my $file = $s->{_file};
@@ -44,9 +52,11 @@ sub write_file {
   my $json = $s->_get_json();
 
   #TODO ensure it works with utf8
-  open (FH, '>', $destination) or die 'Could not open file for writing.';
-  print FH $json;
-  close FH;
+  if (!$s->{_fake_write_flag}) {
+    open (FH, '>', $destination) or die 'Could not open file for writing.';
+    print FH $json;
+    close FH;
+  }
 
   print "Your rules were successfully written to:\n\n $destination.\n\nOpen Karabiner-Elements to import the new rules you have generated.\n\nIf your rules do not appear, please report the issue to our issue queue:\n\nhttps://github.com/sdondley/JSON-Karabiner/issues \n\n"
 }
