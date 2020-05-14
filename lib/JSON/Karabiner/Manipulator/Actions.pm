@@ -45,8 +45,6 @@ sub _is_exclusive {
 
 sub TO_JSON {
   my $obj = shift;
-#  use Data::Dumper qw(Dumper);
-#  print Dumper $obj;
   my $name = $obj->{def_name};
   my $value = $obj->{data};
   return { $name => $value };
