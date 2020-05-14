@@ -6,7 +6,10 @@ use Carp;
 
 sub new {
   my $class = shift;
-  my $self = { actions => {} };
+  my $self = {
+    actions => {},
+    _disable_validity_tests => 0,
+  };
   bless $self, $class;
   return $self;
 }
@@ -97,7 +100,7 @@ sub TO_JSON {
   my $obj = shift;
   #TODO: Change this under certain conditions
   $obj->{actions}{type} = 'basic';
-  $obj->_do_validity_checks($obj->{actions});
+  $obj->_do_validity_checks($obj->{actions}) unless $obj->{_disable_validity_tests};
   return $obj->{actions};
 }
 

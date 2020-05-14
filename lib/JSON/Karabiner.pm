@@ -25,6 +25,7 @@ sub new {
     _mod_file_dir => $opts->{mod_file_dir} || "$ENV{HOME}/.config/karabiner/assets/complex_modifications/",
     _karabiner => { title => $title, rules => [] },
     _fake_write_flag => 0,
+    _rule_obj => '',
   };
   if (!-d $self->{_mod_file_dir}) {
     if ($opts->{_mod_file_dir}) {
@@ -74,6 +75,7 @@ sub add_rule {
   croak "No description passed to rule." if !$desc;
   my $rule = JSON::Karabiner::Rule->new($desc);
   $s->_add_rule($rule);
+  $s->{_rule_object} = $rule;
   return $rule;
 }
 
@@ -92,8 +94,14 @@ sub _dump_json {
   my $json = JSON->new();
   $json = $json->convert_blessed();
 
+  # suppress validity tests
+  $s->{_rule_object}->_disable_validity_tests();
+
   use Data::Dumper qw(Dumper);
   print Dumper $json->pretty->encode($s->{_karabiner});
+
+  # renable validity tests
+  $s->{_rule_object}->_enable_validity_tests();
 }
 
 
