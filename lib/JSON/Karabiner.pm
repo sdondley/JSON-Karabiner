@@ -35,13 +35,13 @@ sub write_file {
   my $dir = $s->{_mod_file_dir};
   my $destination = $dir . $file;
   my $json = $s->_get_json();
-  use Data::Dumper qw(Dumper);
-  print Dumper $json;
 
   #TODO ensure it works with utf8
   open (FH, '>', $destination) or die 'Could not open file for writing.';
   print FH $json;
   close FH;
+
+  print "Your rules were successfully written to:\n\n $destination.\n\nOpen Karabiner-Elements to import the new rules you have generated.\n\nIf your rules do not appear, please report the issue to our issue queue:\n\nhttps://github.com/sdondley/JSON-Karabiner/issues \n\n"
 }
 
 sub _get_json {
@@ -79,7 +79,7 @@ sub _dump_json {
 }
 
 
-# ABSTRACT: easy JSON code generaation for Karabiner-Elements
+# ABSTRACT: easy JSON code generation for Karabiner-Elements
 
 1;
 
@@ -87,27 +87,72 @@ __END__
 
 =head1 OVERVIEW
 
-Write and generte Karabiner json effortlessly using a simple Perl script.
+Write and generate Karabiner json effortlessly using a simple Perl script.
 
 Karabiner is a MacOS application for modifying key and button strokes.
 
 =head1 INSTALLATION
 
-We recommend installing with the C<cpanm> command line command. If it's installed,
-simply run:
+This software is written in Perl and bundled as a package called C<JSON::Karabiner>.
+If you are not familiar with installing Perl packages, don't worry. Just follow
+this simple two-step process:
+
+=head3 Step 1: Ensure the C<cpanm> command is installed:
+
+Run the following command from a terminal window:
+
+  C<which cpanm>
+
+If the terminal reponds with the path to C<cpanm>, proceed to Step 2.
+
+If the C<cpanm> command is not installed, copy and paste one of the following
+three commands into your terminal window to install it:
+
+  # Option 1: Install to system Perl
+  curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+
+  # Option 2: Install to local Perl (you must have a local version of Perl already installed)
+  curl -L https://cpanmin.us | perl - App::cpanminus
+
+  # Option 3: Install as standalone executable
+  cd ~/bin && curl -L https://cpanmin.us/ -o cpanm && chmod +x cpanm
+
+If you are unsure what the best option is for installing C<cpanm>, L<consult its
+documentation for more
+help.|https://metacpan.org/pod/App::cpanminus#INSTALLATION>.
+
+=head3 Step 2: Install the C<JSON::Karabiner> package
+
+Now issue the following comamdn to install the software:
 
   cpanm JSON::Karabiner
 
-If C<cpanm> is not installed, read and L<follow these instructions|https://metacpan.org/pod/App::cpanminus#INSTALLATION> to install it on your Mac.
+After issuing the C<cpanm> command above, you should see a success message. If so,
+you can start using cpanm JSON::Karabiner and start using it in local Perl scripts
+you write. If you get errors about lack of permissions, try running:
 
-Also see L<How to install CPAN modules|https://www.cpan.org/modules/INSTALL.html> for other options.
+  sudo cpanm JSON::Karabiner
+
+If you still get weird errors, it may be a bug. Please report your issue to the
+L<issue queue|https://github.com/sdondley/JSON-Karabiner/issues>
+
+=head4 Other install methods
+
+This module can also be installed using the older C<cpan> command that is
+already on your Mac. See L<how to install CPAN
+modules|https://www.cpan.org/modules/INSTALL.html> for more information.
 
 =head1 SYNOPSIS
 
 Below is an example of an executable perl script for generating a json file for
-use by Karbiner-Elements. Hopefully it is simple enough to understand even if you
-have no experience with programming in Perl. Don't hesitate to get in touch though this project's
-L<GitHub repository|https://github.com/sdondley/JSON-Karabiner> if you need asssistance.
+use by Karbiner-Elements. You can copy and paste this code to your local machine and
+execute it. Feel free to modify it to your liking. Note that you must first
+install the C<JSON::Karabiner> package (see the L</"INSTALLATION"> section below).
+
+Hopefully it is simple enough to understand even if you have no experience with
+programming in Perl. Read through the code below and see if you can determine
+what it will do. Don't hesitate to L<file an issue|https://github.com/sdondley/JSON-Karabiner/issues>
+if you need asssistance.
 
   #!/usr/bin/env perl   # shebang line so this program is opened with perl interpreter
   use JSON::Karabiner;  # make sure this Perl package is installed on your machine
@@ -115,65 +160,78 @@ L<GitHub repository|https://github.com/sdondley/JSON-Karabiner> if you need asss
   use strict;    # always set these in perl for your
   use warnings;  # own sanity
 
-  # create an object
-  my $kb_obj = JSON::Karbiner->new('Give It a Title', 'my_awesome_karbiner_mod.json');
+  # Create an object by passiing it a title and the name of the file you will write to:
+  my $kb_obj = JSON::Karabiner->new('Typing assists', 'my_awesome_karbiner_mod.json');
 
-  # add a rule
-  my $rule = $kb_obj->add_rule('My Rule Name Rules!');
+  # Now add a rule and give it description:
+  my $rule = $kb_obj->add_rule('a-s-d to show character viewer');
 
-  # add a manipulator
+  # Add a manipulator to the rule:
   my $manip_1 = $rule->add_manipulator;
 
-  # add your actions to the manipulator
+  # Add a "from" and "to" action to the manipulator
   my $from = $manip_1->add_action('from');
   my $to = $manip_1->add_action('to');
 
-  # add stuff to the actions
-  $from->add_key_code('period');
-  $from->add_mandatory_modifier('control');
+  # Tell the "from" action what to do
+  $from->add_simultaneous('a', 's', 'd');
+  $from->add_optional_modifiers('any');
 
-  $to->add_keycode('semicolon');
-  my $cond = $to->add_condition('variable_if');
-  $cond->add_variable('some_variable', '1');
+  # Tell the "to" action what to do
+  $to->add_key_code('spacebar');
+  $to->add_modifiers('control', 'command');
 
-  # you can add more manipulators easily
-  my $manip_2 = $rule->add_manipulator
-
-  # Now add your actions, condtions, parameters, etc. to the new $manip_2 below
-
-  # When you are done, it's time to write your file:
+  # Done! Now it's time to write the file:
 
   $kb_obj->write_file;
 
-  # After this script is run a json file called C<my_awesome_karbiner_mod.json>
-  # should now be sitting in the assets/complex_modifications directory.
+Save this above code to a file on your computer and be sure to make the script executable with:
 
+  chmod 744 your_file_name.pl
+
+Then execute this script with:
+
+  ./your_file_name.pl
+
+from the same directory where this script is saved.
+
+After this script is run, a json file called my_awesome_karbiner_mod.json
+should now be sitting in the assets/complex_modifications directory. Open
+the Karabiner-Elements app on your Mac to install the new rules.
+
+Ready to give is try? Follow the L</"INSTALLATION"> instructions to get started.
 
 =head1 DESCRIPTION
 
 Karabiner stores rules for its modifications in a file using a data format
 known as JSON which is painstaking to edit and create. JSON::Karbiner eases the
-pain by writing the JSON for you while you write simple Perl code using the
-methods outlined below. If you aren't familar with Perl, or programming at all,
-don't worry. There are examples provided that you can follow so no programming
-knowledge should be necessary.
+pain by letting Perl write the JSON for you. If you aren't familar with
+Perl, or programming at all, don't worry. There are examples provided that you
+can follow so no programming knowledge should be necessary. The 10 or 20 minutes
+you spend learning how to install and use this module will pay off in spades.
 
 A Karbiner JSON complex modification file stores the rules for modifying the keyboard
-in a data structure called the "manipulators." Therefore, most of what you will
-be writing is code to add data to the manipulator data structure. Then, you write
-the JSON to a file and then load the rules you've written through the Kabrabiner-Elements
-program.
+in a data structure called the "manipulators." Therefore, most of Perl code you
+write adds data to the manipulator data structure. C<JSON::Karabiner> can then
+write the JSON to a file and then you can load the rules you've written using
+the Kabrabiner-Elements program.
 
-Below are descriptions of the methods you use to write your Karbiner json file.
+Below are descriptions of the methods you use to generate the json file.
 There are three important methods to know:
 
 =over 4
 
-=item add_action method: for adding the from/to actions to the Karbiner manipulator data structure
+=item add_action method
 
-=item add_condition method: for adding condtions to the manipulator structure
+for adding the from/to actions to the Karbiner manipulator data structure
 
-=item add_parameters method: for adding parameters to the manipulator data structure
+=item add_condition method
+
+for adding condtions to the manipulator structure
+
+=item add_parameters method
+
+for adding parameters to the manipulator data structure
 
 =back
 
@@ -321,7 +379,7 @@ Adds a description to the manipulator data structure:
 
 This module is currently in the early alpha stages and is actively supported and
 maintained. Suggestion for improvement are welcome. It is known to generate
-valid JSON that allow Karabinder to import rules from the file generated for
+valid JSON that allow Karabiner to import rules from the file generated for
 simple cases.
 
 Many improvements are in the works.
