@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for JSON-Karabiner
 
-{{$NEXT}}
+0.003     2020-05-14 02:26:29-04:00 America/New_York
   - alpha release
   - first draft of documentation added
   - add missing conditions

@@ -1,25 +1,227 @@
 # NAME
 
-JSON::Karabiner - easy JSON code generaation for Karbiner-Elements
+JSON::Karabiner - easy JSON code generaation for Karabiner-Elements
 
 # VERSION
 
-version 0.002
+version 0.003
+
+# INSTALLATION
+
+We recommend installing with the `cpanm` command line command. If it's installed,
+simply run:
+
+    cpanm JSON::Karabiner
+
+If `cpanm` is not installed, read and [follow these instructions](https://metacpan.org/pod/App::cpanminus#INSTALLATION) to install it on your Mac.
+
+Also see [How to install CPAN modules](https://www.cpan.org/modules/INSTALL.html) for other options.
 
 # SYNOPSIS
 
-    use JSON::Karabiner;
+Below is an example of an executable perl script for generating a json file for
+use by Karbiner-Elements. Hopefully it is simple enough to understand even if you
+have no experience with programming in Perl. Don't hesitate to get in touch though this project's
+[GitHub repository](https://github.com/sdondley/JSON-Karabiner) if you need asssistance.
+
+    #!/usr/bin/env perl   # shebang line so this program is opened with perl interpreter
+    use JSON::Karabiner;  # make sure this Perl package is installed on your machine
+
+    use strict;    # always set these in perl for your
+    use warnings;  # own sanity
+
+    # create an object
+    my $kb_obj = JSON::Karbiner->new('Give It a Title', 'my_awesome_karbiner_mod.json');
+
+    # add a rule
+    my $rule = $kb_obj->add_rule('My Rule Name Rules!');
+
+    # add a manipulator
+    my $manip_1 = $rule->add_manipulator;
+
+    # add your actions to the manipulator
+    my $from = $manip_1->add_action('from');
+    my $to = $manip_1->add_action('to');
+
+    # add stuff to the actions
+    $from->add_key_code('period');
+    $from->add_mandatory_modifier('control');
+
+    $to->add_keycode('semicolon');
+    my $cond = $to->add_condition('variable_if');
+    $cond->add_variable('some_variable', '1');
+
+    # you can add more manipulators easily
+    my $manip_2 = $rule->add_manipulator
+
+    # Now add your actions, condtions, parameters, etc. to the new $manip_2 below
+
+    # When you are done, it's time to write your file:
+
+    $kb_obj->write_file;
+
+    # After this script is run a json file called C<my_awesome_karbiner_mod.json>
+    # should now be sitting in the assets/complex_modifications directory.
 
 # DESCRIPTION
 
-# REQUIRES
+Karabiner stores rules for its modifications in a file using a data format
+known as JSON which is painstaking to edit and create. JSON::Karbiner eases the
+pain by writing the JSON for you while you write simple Perl code using the
+methods outlined below. If you aren't familar with Perl, or programming at all,
+don't worry. There are examples provided that you can follow so no programming
+knowledge should be necessary.
 
-- [Carp](https://metacpan.org/pod/Carp)
-- [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
-- [JSON](https://metacpan.org/pod/JSON)
-- [JSON::Karabiner::Rule](https://metacpan.org/pod/JSON::Karabiner::Rule)
-- [strict](https://metacpan.org/pod/strict)
-- [warnings](https://metacpan.org/pod/warnings)
+A Karbiner JSON complex modification file stores the rules for modifying the keyboard
+in a data structure called the "manipulators." Therefore, most of what you will
+be writing is code to add data to the manipulator data structure. Then, you write
+the JSON to a file and then load the rules you've written through the Kabrabiner-Elements
+program.
+
+Below are descriptions of the methods you use to write your Karbiner json file.
+There are three important methods to know:
+
+- add\_action method: for adding the from/to actions to the Karbiner manipulator data structure
+- add\_condition method: for adding condtions to the manipulator structure
+- add\_parameters method: for adding parameters to the manipulator data structure
+
+It will be very helpful if you have a basic familiarity with the Karbiner manipulator
+definition. See the [Karabiner complex\_modification manipulator documentation](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/) for more information.
+
+The documentation below is not exhaustive. You'll also need to consult the documenation
+found at:
+
+- [from action](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::From)
+- [to action](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::To)
+- [conditions](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Conditions)
+
+    But the best way to learn, of course, is to experiment and see what happens.
+
+# METHODS
+
+Below are the methods for the Karabiner, Rule, and Manipulator classes.
+
+## Karabiner Object Methods
+
+### new($title, $file, { mod\_file\_dir => $path\_to\_dir } )
+
+    my $kb_obj = JSON::Karbiner->new('title', 'file.json');
+
+The new method creates an object that holds the entire data structure. This
+should be the first command you issue in your scipt.
+
+The $title and $file arguments are required. An optional third argument
+can be passed to change the default Karbiner directory which is set to:
+
+    ~/.config/karabiner/assets/complex_modifications/
+
+If you are using a non-standard location for your Karbiner install, you must
+change this directory to where Karbiner stores its modifications on your local machine
+by setting the `mod_file_dir` option to the path on your hard drive.
+
+### write\_file()
+
+This will generally be the last command in your script:
+
+    $kb_obj->write();
+
+Once the file is written, you should be able to add the rules from your script
+using the Karbiner-Elements program. If it does not appear there, first check
+to make sure the file is saving to the right directory. If it still doesn't work,
+please open an issue on GitHub and post your perl script as it may be a bug.
+
+### add\_rule($rule\_name)
+
+Every Karabiner json file has a rules data structure which contains all the
+modifications. Add it to your object like so:
+
+    my $rule = $kb_obj->add_rule('My Cool Rule');
+
+## Rule Methods
+
+### add\_manipulator()
+
+A manipulator must be added to the Rule object to do anything useful:
+
+    my $manip = $rule->add_manipulator
+
+Once done, you can add actions, conditions, and parameters to your manipulator. See
+below for more information.
+
+## Manipulator Methods
+
+### add\_action($type)
+
+There are seven different types of actions you can add:
+
+    my $from        = $manip->add_action('from');
+    my $to          = $manip->add_action('to');
+    my $to_alone    = $manip->add_action('to_if_alone');
+    my $to_down     = $manip->add_action('to_if_held_down');
+    my $to_up       = $manip->add_action('to_after_key_up');
+    my $to_invoked  = $manip->add_action('to_delayed_if_invoked');
+    my $to_canceled = $manip->add_action('to_delayed_if_canceled');
+
+The major ones are the first four listed above. You must create a `from` action to
+your manipulator. This the actions that contains the keystrokes you want to change.
+The other `to` actions describe what the `from` keystroke actions will be changed
+into. See the Karbiner documentation for more information on these actions.
+
+Once these actions are created, you may apply methods to them to add additional
+data. Consult the documentation for the different actions for a listing and
+description of those methods:
+
+- [JSON::Karabiner::Manipulator::Actions::From](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::From)
+- [JSON::Karabiner::Manipulator::Actions::To](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::To)
+
+### add\_condition($type)
+
+Conditions make the modification conditional upon some other bit of data. You
+can add the following types of conditions:
+
+    $manip->add_condition('device_if');
+    $mainp->add_condition('device_unless')
+    $manip->add_condition('event_changed_if')
+    $manip->add_condition('frontmost_application_if')
+    $manip->add_condition('frontmost_application_unless')
+    $manip->add_condition('input_source_if')
+    $manip->add_condition('input_source_unless')
+    $manip->add_condition('keyboard_type_if')
+    $manip->add_condition('variable_if')
+    $manip->add_condition('variable_unless')
+
+Consult the Karabiner documenation for more information on conditions. Once the conditions
+are created, you can add data to them using methods. See the documenation for each of the type of
+conditions and the types of methods they use:
+
+[JSON::Karabiner::Manipulator::Conditions](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Conditions)
+
+### add\_parameter($name, $value)
+
+Parameters are used by Karabiner to change various timing aspects of the actions. Four
+different parameters may be set:
+
+    $manip->add_parameter('to_if_alone_timeout_milliseconds', 500);
+    $manip->add_parameter('to_if_held_down_threshold_milliseconds, 500);
+    $manip->add_parameter('to_delayed_action_delay_milliseconds, 250);
+    $manip->add_parameter('simultaneous_threshold_milliseconds, 50);
+
+See the Karabiner documentation for more details.
+
+### add\_description($description)
+
+Adds a description to the manipulator data structure:
+
+    $manip->add_description('This turns a period into a hyper key.');
+
+# Development Status
+
+This module is currently in the early alpha stages and is actively supported and
+maintained. Suggestion for improvement are welcome. It is known to generate
+valid JSON that allow Karabinder to import rules from the file generated for
+simple cases.
+
+Many improvements are in the works.
 
 # SUPPORT
 
@@ -52,12 +254,17 @@ from your repository :)
 
 # BUGS AND LIMITATIONS
 
-You can make new bug reports, and view existing ones, through the
-web interface at [http://rt.cpan.org](http://rt.cpan.org).
+Though this software is still in an alpha state, it should be able to generate
+code for any property with the exception of the `to_after_key_up` key/value use
+for the simultaneous options behavior due to uncertainty in how this should be
+implemented. If you need this feature, generate your json code using this script
+as you normally would and then manually edit it to insert the necessary json
+code.
 
-# INSTALLATION
+# SEE ALSO
 
-See perlmodinstall for information and options on installing Perl modules.
+- [Karabiner Elements Home Page](https://karabiner-elements.pqrs.org)
+- [Karabiner Elements Reference Manual](https://metacpan.org/pod/Documentation)
 
 # AUTHOR
 
@@ -69,3 +276,11 @@ This software is copyright (c) 2020 by Steve Dondley.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 112:
+
+    You forgot a '=back' before '=head1'
