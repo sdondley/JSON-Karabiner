@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for JSON-Karabiner
 
-{{$NEXT}}
+0.004     2020-05-14 11:15:53-04:00 America/New_York
   - fix POD error
   - documentation improvements
 
