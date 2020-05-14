@@ -106,43 +106,62 @@ But the best way to learn, of course, is to experiment and see what happens.
 
 # METHODS
 
-Below are the methods for the Karabiner, Rule, and Manipulator classes.
+Below are the methods for the Karabiner, Rule, and Manipulator classes. The
+classes are used to create objects that you then run methods on.
+
+First, you create your Karabiner object, then add a rule object to it, and then
+you add one or more manipulators to the rule. Then you add your actions,
+conditions and paramaters to manipulators.
+
+Together, these methods create one large data structure that gets written to
+the json file. A good way to get a feel for how this works is to write just a
+little bit of Perl code, write it to a file, and then look at the file. Then add
+a little bit more Perl code, run the script again, and see what happens. You can
+also use the undocumented `_dump_json` method on the Karbiner object to spit
+out it's current state: `$kb_obj-<E<t>_dump_json`.
 
 ## Karabiner Object Methods
 
-### new($title, $file, { mod\_file\_dir => $path\_to\_dir } )
+### new($title, $file, \[ { mod\_file\_dir => $path\_to\_dir } \] )
 
     my $kb_obj = JSON::Karbiner->new('title', 'file.json');
 
-The new method creates an object that holds the entire data structure. This
-should be the first command you issue in your scipt.
+The new method creates the Karbiner object that holds the entire data structure.
+This should be the first command you issue in your scipt.
 
-The $title and $file arguments are required. An optional third argument
-can be passed to change the default Karbiner directory which is set to:
+The $title and $file arguments are required. An optional third argument, set
+inside curly braces, can be passed to change the default Karbiner directory
+which is set to:
 
     ~/.config/karabiner/assets/complex_modifications/
 
+You must pass this third argument inside the curly brackes as shown in this example:
+
+    my $kb_obj = JSON::Karbiner->new('title', 'file.json', { mod_file_dir => '/path/to/dir' } ));
+
 If you are using a non-standard location for your Karbiner install, you must
-change this directory to where Karbiner stores its modifications on your local machine
-by setting the `mod_file_dir` option to the path on your hard drive.
+change this directory to where Karbiner stores its modifications on your local
+machine by setting `mod_file_dir` option to the correct path on your drive.
 
 ### write\_file()
 
 This will generally be the last command in your script:
 
-    $kb_obj->write();
+    $kb_obj->write_file();
 
 Once the file is written, you should be able to add the rules from your script
 using the Karbiner-Elements program. If it does not appear there, first check
 to make sure the file is saving to the right directory. If it still doesn't work,
 please open an issue on GitHub and post your perl script as it may be a bug.
 
-### add\_rule($rule\_name)
+### add\_rule($rule\_title)
 
 Every Karabiner json file has a rules data structure which contains all the
 modifications. Add it to your object like so:
 
-    my $rule = $kb_obj->add_rule('My Cool Rule');
+    my $rule = $kb_obj->add_rule('My Cool Rule Title');
+
+Set the title of the rule by passing it a string set in quotes.
 
 ## Rule Methods
 
@@ -274,7 +293,7 @@ modules](https://www.cpan.org/modules/INSTALL.html) for more information.
 
 # VERSION
 
-version 0.007
+version 0.008
 
 # Development Status
 
@@ -338,3 +357,11 @@ This software is copyright (c) 2020 by Steve Dondley.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 128:
+
+    Unknown E content in E&lt;t>
