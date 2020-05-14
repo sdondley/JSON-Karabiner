@@ -1,6 +1,6 @@
-Revision history for {{$dist->name}}
+Revision history for JSON-Karabiner
 
-{{$NEXT}}
+0.006     2020-05-14 15:52:31-04:00 America/New_York
   - add check on directory where file is to be saved
   - fixed critical typo that created bad json property
 
