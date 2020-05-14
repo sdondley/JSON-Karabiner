@@ -21,7 +21,7 @@ plan tests => $tests;
 # test that it dies if file not passed
 my $obj;
 lives_ok { $obj = JSON::Karabiner->new('some_title', 'file.json'); } 'creates object';
-lives_ok { $obj->create_rule('some rule'); } 'can create rule';
-dies_ok { $obj->create_rule() } 'rules require names';
-throws_ok { $obj->create_rule() } qr/No description passed/, 'throws correct error when no name passed';
+lives_ok { $obj->add_rule('some rule'); } 'can create rule';
+dies_ok { $obj->add_rule() } 'rules require names';
+throws_ok { $obj->add_rule() } qr/No description passed/, 'throws correct error when no name passed';
 is_deeply $obj->{_karabiner}, {title => 'some_title', rules => [ { description => 'some rule', manipulators => [] } ]}, 'rule get added to karabiner object';

@@ -40,57 +40,66 @@ sub TO_JSON {
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
 =head1 SYNOPSIS
 
   use JSON::Karabiner;
 
+  # first, create the condition object
+  my $variable_cond_obj = $manip_obj->add_condition('variable_if');
+
+  # next, add data to it
+  $variable_cond_obj->add_variable('some_var_name' => 'some_value')
+
 =head1 DESCRIPTION
 
-=method method1()
+Condtions make the C<from> and C<to> actions conditional upon the values of other
+data. This gives you more control over when and under what environments your actions
+will occur. Below is an overview of how to set the conditions available to you
+via Karabiner.
 
+Note that the condition objects must be created before you can add data to them.
+See the example in the Synopsis above.
 
+=head3 'device_if' and 'device_unless'
 
-=method method2()
+  $device_condition_obj->add_identifier('vendor_id' => 5, 'product_id' => 2222);
+  $device_condition_obj->add_identifier('vendor_id' => 6, 'product_id' => 2223);
+  $device_condition_obj->add_description('some description');
 
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/device/>
 
+=head3 'event_changed_if' and 'event_chaned_unless'
 
-=func function1()
+  $event_condition_obj->add_value( 'true' );
+  $event_condition_obj->add_description('some description');
 
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/>
 
+=head3 'frontmost_application_if' and 'frontmost_application_unless'
 
-=func function2()
+  $fm_app_obj->add_bundle_identifiers( 'bundle_id_one', 'bundle_id_two');
+  $fm_app_obj->add_file_paths( 'file_path1', 'file_path2');
+  $fm_app_obj->add_description('some description');
 
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/>
 
+=head3 'input_source_if', and 'input_source_unless'
 
-=attr attribute1
+  $input_source_obj->add_input_source('language' => 'languare regex', 'input_source_id' => 'input source id regex');
+  $input_source_obj->add_input_source('language' => 'languare regex', 'input_source_id' => 'input source id regex');
+  $input_source_obj->add_description('some description');
 
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/input-source/>
 
+=head3 'keyboard_type_if', and 'keyboard_type_unless'
 
-=attr attribute2
+  $keybd_condition_obj->add_keyboard_types('keybd_type1', 'keybd_type2')
+  $keybd_condition_obj->add_description('some description')
 
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/keyboard-type/>
 
+=head3 'variable_if', and 'variable_unless'
 
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
+  $var_cond_obj->add_variable('variable_name' => 'value');
 
-
-=head1 DEPENDENCIES
-
-=head1 AUTHOR NOTES
-
-=head2 Development status
-
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
-
-- Note possible future roadmap items.
-
-=head2 Motivation
-
-Provide motivation for writing the module here.
-
-#=head1 SEE ALSO
+See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/variable/>

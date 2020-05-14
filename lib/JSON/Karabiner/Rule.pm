@@ -34,57 +34,10 @@ sub TO_JSON { return { %{ shift() } }; }
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
-=head1 SYNOPSIS
-
-  use JSON::Karabiner;
 
 =head1 DESCRIPTION
 
-=method method1()
+Please see the L<JSON::Karabiner> for more thorough documentation of these module.
+Methods are listed below for reference purposes only.
 
-
-
-=method method2()
-
-
-
-=func function1()
-
-
-
-=func function2()
-
-
-
-=attr attribute1
-
-
-
-=attr attribute2
-
-
-
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
-
-
-=head1 DEPENDENCIES
-
-=head1 AUTHOR NOTES
-
-=head2 Development status
-
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
-
-- Note possible future roadmap items.
-
-=head2 Motivation
-
-Provide motivation for writing the module here.
-
-#=head1 SEE ALSO
+=head3 add_manipulator()

@@ -53,11 +53,11 @@ Provide overview of who the intended audience is for the module and why it's use
 
 =head1 DESCRIPTION
 
-=method method1()
+=head3 method1()
 
 
 
-=method method2()
+=head3 method2()
 
 
 

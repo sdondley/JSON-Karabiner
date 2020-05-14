@@ -44,69 +44,79 @@ sub add_condition {
   return $condition;
 }
 
+sub add_description {
+  my $s = shift;
+  my $desc = shift;
+
+  croak 'To add a description, you must provide one' if !$desc;
+  $s->{actions}{description} = $desc;
+}
+
+sub add_parameter {
+  my $s = shift;
+  my $param = shift;
+  my $value = shift;
+  croak 'To add a parameter, you must tell me which kind you\'d like to add' if !$param;
+  croak 'To add a parameter, you must provide a value' if !$value;
+
+  my @acceptable_values = qw( to_if_alone_timeout_milliseconds
+                              alone_timeout
+                              alone
+                              to_if_held_down_threshold_milliseconds
+                              held_down_threshold
+                              down_threshold
+                              held_down
+                              down
+                              to_delayed_action_delay_milliseconds
+                              delayed_action_delay
+                              action_delay
+                              delay
+                              simultaneous_threshold_milliseconds
+                              simultaneous_threshold
+                              simultaneous
+                              );
+
+  my $param_exists = grep { $param eq $_ } @acceptable_values;
+  croak "'$param' in an unrecognzed parameter" unless $param_exists;
+
+  # get param full name
+  if ($param =~ /alone/) {
+    $param = 'to_if_alone_timeout_milliseconds';
+  } elsif ($param =~ /down/) {
+    $param = 'to_if_held_down_threshold_milliseconds';
+  } elsif ($param =~ /delay/) {
+    $param = 'to_delayed_action_delay_milliseconds';
+  } elsif ($param =~ /simultaneous/) {
+    $param = 'simultaneous_threshold_milliseconds';
+  }
+
+  $s->{actions}{parameters}{"basic.$param"} = $value;
+}
+
 sub TO_JSON {
   my $obj = shift;
+  #TODO: Change this under certain conditions
+  $obj->{actions}{type} = 'basic';
   return $obj->{actions};
 }
 
-
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: manipulator object for containing and outputting its data
 
 1;
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
-=head1 SYNOPSIS
-
-  use JSON::Karabiner;
-
 =head1 DESCRIPTION
 
-=method method1()
+Please see the L<JSON::Karabiner> for more thorough documentation of this module.
+Methods are listed below for reference purposes only.
 
+=head3 new()
 
+=head3 add_action($type)
 
-=method method2()
+=head3 add_condition($type)
 
+=head3 add_parameter($name, $value)
 
-
-=func function1()
-
-
-
-=func function2()
-
-
-
-=attr attribute1
-
-
-
-=attr attribute2
-
-
-
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
-
-
-=head1 DEPENDENCIES
-
-=head1 AUTHOR NOTES
-
-=head2 Development status
-
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
-
-- Note possible future roadmap items.
-
-=head2 Motivation
-
-Provide motivation for writing the module here.
-
-#=head1 SEE ALSO
+=head3 add_description($description)

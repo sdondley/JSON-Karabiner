@@ -14,63 +14,26 @@ sub new {
   return $obj;
 }
 
-# ABSTRACT: to_if_alone action
+# ABSTRACT: to_if_alone action class
 
 1;
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
 =head1 SYNOPSIS
 
   use JSON::Karabiner;
 
+  my $to_if_alone_action = $manip_obj->add_action('to_if_alone');
+
+  # Use methods to add data to the C<to_if_alone> action:
+
+  $to_if_action->add_key_code('h', 'i', 'x');
+  $to_action->add_l_modifiers('control', 'left_shift');
+
 =head1 DESCRIPTION
 
-=method method1()
+See L<JSON::Karabiner::Manipulator::Actions::To> for documentation of this
+class' methods.
 
-
-
-=method method2()
-
-
-
-=func function1()
-
-
-
-=func function2()
-
-
-
-=attr attribute1
-
-
-
-=attr attribute2
-
-
-
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
-
-
-=head1 DEPENDENCIES
-
-=head1 AUTHOR NOTES
-
-=head2 Development status
-
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
-
-- Note possible future roadmap items.
-
-=head2 Motivation
-
-Provide motivation for writing the module here.
-
-#=head1 SEE ALSO
+See L<the official Karabiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-alone/> for more details on how this action works.

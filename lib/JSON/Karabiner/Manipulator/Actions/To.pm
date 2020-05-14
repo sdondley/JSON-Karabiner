@@ -140,64 +140,119 @@ sub add_modifiers {
   $lkc->{modifiers} = $existing;
 }
 
-
 # ABSTRACT: To action
 
 1;
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
 =head1 SYNOPSIS
 
   use JSON::Karabiner;
 
+  my $to_action = $manip_obj->add_action('to');
+
+  # Use methods to add data to the C<to> action:
+
+  $to_action->add_key_code('h', 'i', 'x');
+  $to_action->add_l_modifiers('control', 'left_shift');
+
+  # Other C<to> actions may be added as well:
+
+  my $to_alone_action = JSON::Karabiner->new('Title', 'file.json')->add_rule()->add_manipulator->add_action->('to_if_alone');
+
 =head1 DESCRIPTION
 
-=method method1()
+The C<To> actions describe what Karbiner will do when the C<from> action
+associated with the C<to> action is triggered. For example, you may want
+Karbiner to execute a shell script if C<control-shift-h> is pressed.
 
+Below are the methods used to add data to the C<to> action. Note that the
+methods below also apply to the other C<to> actions (C<to_if_alone>,
+C<to_after_key_up>, etc.)
 
+Consult the official L<Karbiner
+documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/>
+about the C<to> data structure.
 
-=method method2()
+=head3 new($type)
 
+The constructor method is not called directly. The C<to> action object is more
+typically created via the manipulator object's C<add_action()> method.
 
+=head3 add_key_code(@values)
 
-=func function1()
+Add a C<key_code> property to a C<to> action:
 
+  $to->add_key_code('h', 'i', 'x');
 
+Special properties for key codes (C<lazy>, C<repeat>, C<halt> and C<hold_down_millisecond>
+can be attached with the following special notation:
 
-=func function2()
+  $to->add_key_code('h-L')   # adds a "lazy" property to key code
+  $to->add_key_code('h-R')   # adds a "repeat" property to key code
+  $to->add_key_code('h-H')   # adds a "halt" property to key code
+  $to->add_key_code('h-200') # adds a "hold_down_milliseconds" property to the key
+                             # code with the value set to the number specified after the dash
 
+=head3 add_consumer_key_code($value)
 
+Add a C<consumer_key_code> property to a C<from> action:
 
-=attr attribute1
+  $to->add_consumer_key_code('MUSIC_NEXT');
 
+=head3 add_pointing_button($value)
 
+Add a C<pointing_button> property to a C<from> action:
 
-=attr attribute2
+  $to->add_pointing_button('button2');
 
+=head3 add_shell_command($command)
 
+Add a C<shell_command> property to a C<to> action:
 
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
+  $to->add_shell_command('ls');
 
+=head3 add_select_input_source($option, $value)
 
-=head1 DEPENDENCIES
+Add a C<select_input_source> property to a C<to> action:
 
-=head1 AUTHOR NOTES
+  $to->select_input_source('language', 'language regex');
 
-=head2 Development status
+Multiple option/value pairs may be set by calling this method multiple times.
 
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
+https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/select-input-source/
 
-- Note possible future roadmap items.
+=head3 add_select_input_source($option, $value)
 
-=head2 Motivation
+Add a C<select_input_source> property to a C<to> action:
 
-Provide motivation for writing the module here.
+  $to->add_select_input_source('language', 'language regex');
 
-#=head1 SEE ALSO
+Multiple option/value pairs may be set by calling this method multiple times.
+
+=head3 add_set_variable($name, $value)
+
+Add a C<set_value> property to a C<to> action:
+
+  $to->add_set_variable('some_variable', '0');
+
+=head3 add_mouse_key($name, $value)
+
+Add a C<mouse_key> property to a C<to> action:
+
+  $to->add_mouse_key('speed_multiplier', '1.0');
+
+Multiple name/value pairs may be set by calling this method multiple times.
+
+https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to/mouse-key/
+
+=head3 add_modifiers(@modifiers)
+
+Add a C<modifiers> property to a keys in a C<to> action:
+
+  $to->add_modifiers('left_shift', 'left_command');
+
+The modifiers can only be applied to the last key/buttons added to the object. In other words,
+if you need to apply to modifier to more than one key, add the keys that require modifiers
+individually and then add your modifiers.

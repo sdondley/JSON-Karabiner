@@ -4,14 +4,14 @@ use warnings;
 sub gen_def {
   my $type = shift;
   my $obj = JSON::Karabiner->new('some_title', 'file.json');
-  my $def = $obj->create_rule('some desc')->add_manipulator->add_action($type);
+  my $def = $obj->add_rule('some desc')->add_manipulator->add_action($type);
   return ($obj, $def);
 }
 
 sub gen_cond {
   my $type = shift;
   my $obj = JSON::Karabiner->new('some_title', 'file.json');
-  my $manip = $obj->create_rule('some desc')->add_manipulator;
+  my $manip = $obj->add_rule('some desc')->add_manipulator;
   my $cond = $manip->add_condition($type);
   return ($obj, $cond, $manip);
 }

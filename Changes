@@ -1,6 +1,14 @@
-Revision history for JSON-Karabiner
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+  - alpha release
+  - first draft of documentation added
+  - add missing conditions
+  - fixed bug in from method for adding key code
+  - first release to cpan
 
 0.002     2020-05-13 18:17:14-04:00 America/New_York
+  - early alpha release
 
 0.001     2020-05-13 17:23:41-04:00 America/New_York
   -init commit

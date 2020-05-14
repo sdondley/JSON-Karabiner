@@ -39,12 +39,12 @@ sub add_key_code {
     $letter_code = $1;
     $ms = $2;
   }
-  croak 'Specifiers such as lazy, repeat, halt, and hold_down_in_milliseconds do not apply in "from" defintions'
+  croak 'Specifiers such as lazy, repeat, halt, and hold_down_in_milliseconds do not apply in "from" actions'
     if $letter_code || $ms;
   if (exists $s->{data}{$input_type}) {
     croak 'From action already has that property';
   }
-  $s->{from}{$input_type} = $key_codes[0];
+  $s->{data}{$input_type} = $key_codes[0];
 
   $s->{code_set} = 1;
 }
@@ -93,7 +93,7 @@ sub add_simultaneous_options {
   my $s = shift;
   my $option = shift;
   my @values = @_;
-  my @allowed_options = qw ( detect_key_down_uinterruptedly
+  my @allowed_options = qw ( detect_key_down_uninterruptedly
                              key_down_order key_up_when to_after_key_up );
   my $exists = grep { $_ = $option } @allowed_options;
   croak "Simultaneous option is not a valid option" if $exists;
@@ -103,7 +103,7 @@ sub add_simultaneous_options {
   #TODO: offer suggestions if error thrown
   croak "Simultaneous option $option has already been set" if ($s->{"so_${option}_is_set"} == 1);
 
-  if ($option eq 'detect_key_down_uinterruptedly') {
+  if ($option eq 'detect_key_down_uninterruptedly') {
     if ($value !~ /true|false/) {
       croak "$value is not a valid option for $option";
     }
@@ -130,57 +130,99 @@ sub add_simultaneous_options {
 
 __END__
 
-=head1 OVERVIEW
-
-Provide overview of who the intended audience is for the module and why it's useful.
-
 =head1 SYNOPSIS
 
   use JSON::Karabiner;
 
+  my $from_action = $manip_obj->add_action('from');
+
+  # Use methods to add data to the C<from> action:
+
+  $from_action->add_key_code('h');
+  $from_action->add_optional_modifiers('control', 'left_shift');
+
 =head1 DESCRIPTION
 
-=method method1()
+The C<from> action describes the key and button presses that you want Karbiner
+to modify. For example, you may want Karbiner to do something when you hit
+C<Control-Shift-h>.
 
+Below are the methods used to add data to the C<from> action. Consult the
+official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/> about the C<from> data structure.
 
+=head1 METHODS
 
-=method method2()
+=head3 new($type)
 
+The constructor method is not called directly. The C<from> action object is more
+typically created via the manipulator object's C<add_action()> method.
 
+=head3 add_key_code($value)
 
-=func function1()
+Add a C<key_code> property to a C<from> action:
 
+  $from->add_key_code('h');
 
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/>
 
-=func function2()
+=head3 add_any($value)
 
+Add an C<any> property to a C<from> action:
 
+  $from->add_any($value);
 
-=attr attribute1
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/any/>
 
+=head3 add_consumer_key_code($value)
 
+Add an C<consumer_key_code> property to a C<from> action:
 
-=attr attribute2
+  $from->add_consumer_key_code('MUSIC_NEXT');
 
+=head3 add_pointing_button($value)
 
+Add an C<pointing_button> property to a C<from> action:
 
-#=head1 CONFIGURATION AND ENVIRONMENT
-#
-#JSON::Karabiner requires no configuration files or environment variables.
+  $from->add_pointing_button('button2');
 
+=head3 add_optional_modifiers(@values)
 
-=head1 DEPENDENCIES
+Add an C<optional_modifiers> property to keycodes in a C<from> action:
 
-=head1 AUTHOR NOTES
+  $from->add_optional_modifiers('control', 'shift', 'command');
 
-=head2 Development status
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/>
 
-This module is currently in the beta stages and is actively supported and maintained. Suggestion for improvement are welcome.
+See official L<Karbiner documentation|>
 
-- Note possible future roadmap items.
+=head3 add_mandatory_modifiers(@values)
 
-=head2 Motivation
+Add an C<mandatory_modifiers> property to keycodes in a C<from> action:
 
-Provide motivation for writing the module here.
+  $from->add_mandatory_modifiers('shift', 'command');
 
-#=head1 SEE ALSO
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/>
+
+=head3 add_simulatneous([ $key_code_type = 'key_code' ], @values)
+
+Add an C<simultaneous> property to a C<from> action:
+
+  $from->add_simultaneous('a', 'j');
+
+An optional C<key_code_type> can be passed in as the first argument:
+
+  $from->add_simulataneous('pointing_button', 'button1', 'button2')
+
+If no C<key_code_type> value is detected, a default value of C<key_code> is used.
+
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous/>
+
+=head3 add_simulatneous_options([ $key_code_type = 'key_code' ], @values)
+
+Add an C<simultaneous> property to a C<from> action:
+
+  $from->add_simultaneous_options('key_down_order', 'strict');
+
+Multiple options by set my calling this method multiple times.
+
+See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/simultaneous-options/>
