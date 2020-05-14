@@ -89,9 +89,10 @@ sub _check_if_file_exits {
 
 sub _dump_json {
   my $s = shift;
-  use Data::Dumper qw(Dumper);
   my $json = JSON->new();
   $json = $json->convert_blessed();
+
+  use Data::Dumper qw(Dumper);
   print Dumper $json->pretty->encode($s->{_karabiner});
 }
 
