@@ -6,7 +6,10 @@ use Carp;
 
 sub new {
   my $class = shift;
-  my $self = { actions => {} };
+  my $self = {
+    actions => {},
+    _disable_validity_tests => 0,
+  };
   bless $self, $class;
   return $self;
 }
@@ -97,7 +100,40 @@ sub TO_JSON {
   my $obj = shift;
   #TODO: Change this under certain conditions
   $obj->{actions}{type} = 'basic';
+  $obj->_do_validity_checks($obj->{actions}) unless $obj->{_disable_validity_tests};
   return $obj->{actions};
+}
+
+sub _do_validity_checks {
+  use Data::Dumper qw(Dumper);
+  my $s = shift;
+  my $actions = shift;
+  my $from = $actions->{from};
+  $s->_do_from_validity_checks($from);
+}
+
+
+sub _do_from_validity_checks {
+  my $s = shift;
+  my $from = shift;
+
+  if (! defined $from) {
+    croak "No 'from' action found in the manipulator. You must add a 'from' action.'";
+  }
+
+  if (! %$from) {
+    croak "The 'from' action is empty. Perform methods on the 'from' action to tell it how to behave.";
+  }
+
+  return;
+
+#  my @from_keys = keys %$from;
+#  my $has_key_code = grep { $_ =~ /^any|consumer_key_code|key_code$/ } @from_keys;
+#  print Dumper \@from_keys;
+#  if (!$has_key_code && grep { $_ =~ /modifiers/ } @from_keys) {
+#    print Dumper 'aksjdkajsdf';
+#    croak "You cannot have modifiers without anything to modify in a 'from' action.";
+#  }
 }
 
 # ABSTRACT: manipulator object for containing and outputting its data

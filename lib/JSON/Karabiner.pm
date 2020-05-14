@@ -24,6 +24,8 @@ sub new {
     _file => $file,
     _mod_file_dir => $opts->{mod_file_dir} || "$ENV{HOME}/.config/karabiner/assets/complex_modifications/",
     _karabiner => { title => $title, rules => [] },
+    _fake_write_flag => 0,
+    _rule_obj => '',
   };
   if (!-d $self->{_mod_file_dir}) {
     if ($opts->{_mod_file_dir}) {
@@ -36,6 +38,13 @@ sub new {
   return $self;
 }
 
+# used by test scripts
+sub _fake_write_file {
+  my $s = shift;
+  $s->{_fake_write_flag} = 1;
+  $s->write_file;
+}
+
 sub write_file {
   my $s = shift;
   my $file = $s->{_file};
@@ -44,9 +53,11 @@ sub write_file {
   my $json = $s->_get_json();
 
   #TODO ensure it works with utf8
-  open (FH, '>', $destination) or die 'Could not open file for writing.';
-  print FH $json;
-  close FH;
+  if (!$s->{_fake_write_flag}) {
+    open (FH, '>', $destination) or die 'Could not open file for writing.';
+    print FH $json;
+    close FH;
+  }
 
   print "Your rules were successfully written to:\n\n $destination.\n\nOpen Karabiner-Elements to import the new rules you have generated.\n\nIf your rules do not appear, please report the issue to our issue queue:\n\nhttps://github.com/sdondley/JSON-Karabiner/issues \n\n"
 }
@@ -64,6 +75,7 @@ sub add_rule {
   croak "No description passed to rule." if !$desc;
   my $rule = JSON::Karabiner::Rule->new($desc);
   $s->_add_rule($rule);
+  $s->{_rule_object} = $rule;
   return $rule;
 }
 
@@ -79,10 +91,17 @@ sub _check_if_file_exits {
 
 sub _dump_json {
   my $s = shift;
-  use Data::Dumper qw(Dumper);
   my $json = JSON->new();
   $json = $json->convert_blessed();
+
+  # suppress validity tests
+  $s->{_rule_object}->_disable_validity_tests();
+
+  use Data::Dumper qw(Dumper);
   print Dumper $json->pretty->encode($s->{_karabiner});
+
+  # renable validity tests
+  $s->{_rule_object}->_enable_validity_tests();
 }
 
 
@@ -182,6 +201,7 @@ if you need asssistance.
 
   # Tell the "from" action what to do
   $from->add_simultaneous('a', 's', 'd');
+  $from->add_optional_modifiers('any');
 
   # Tell the "to" action what to do
   $to->add_key_code('spacebar');

@@ -71,7 +71,7 @@ sub _add_modifiers {
   my $values = \@_;
   croak "This action already has $mod_type modifiers" if $s->{"has_${mod_type}_modifiers"};
 
-  $s->{data}{modifers}{$mod_type} = \@_;
+  $s->{data}{modifiers}{$mod_type} = \@_;
   $s->{"has_${mod_type}_modifiers"} = 1;
 }
 
