@@ -31,6 +31,7 @@ is 'some_file.json', JSON::Karabiner->new('title', 'some_file.json')->{_file}, '
 
 is "$ENV{HOME}/.config/karabiner/assets/complex_modifications/", JSON::Karabiner->new('title', 'some_file.json')->{_mod_file_dir}, 'sets mod path';
 
-is "custom_mod_dir", JSON::Karabiner->new('title', 'some_file.json', {mod_file_dir => 'custom_mod_dir'})->{_mod_file_dir}, 'can create a custom mod dir';
-
-
+SKIP: {
+  skip 'probably a windows machine', 1 if (!-d '/tmp');
+  is "/tmp", JSON::Karabiner->new('title', 'some_file.json', {mod_file_dir => '/tmp'})->{_mod_file_dir}, 'can create a custom mod dir';
+}

@@ -25,6 +25,13 @@ sub new {
     _mod_file_dir => $opts->{mod_file_dir} || "$ENV{HOME}/.config/karabiner/assets/complex_modifications/",
     _karabiner => { title => $title, rules => [] },
   };
+  if (!-d $self->{_mod_file_dir}) {
+    if ($opts->{_mod_file_dir}) {
+      croak "The directory you attempted to set with the 'mod_file_dir' option does not exist.\n\n";
+    } else {
+      croak "The default directory for storing complex modifications does not exist. Do you have Karbiner-Elements installed? Is it installed with a non-standard configuration? Try setting the location of the directory manually with the 'mod_file_dir' option. Consult this module's documentation for more information with using the 'perldoc JSON::Karabiner' command in the terminal.\n\n";
+    }
+  }
   bless $self, $class;
   return $self;
 }
