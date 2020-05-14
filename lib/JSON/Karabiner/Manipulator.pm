@@ -105,23 +105,32 @@ sub _do_validity_checks {
   use Data::Dumper qw(Dumper);
   my $s = shift;
   my $actions = shift;
-  print Dumper $actions;
   my $from = $actions->{from};
   $s->_do_from_validity_checks($from);
 }
 
+
 sub _do_from_validity_checks {
-  use Data::Dumper qw(Dumper);
-  return;
   my $s = shift;
   my $from = shift;
-  my @from_keys = keys %$from;
-  my $has_key_code = grep { $_ =~ /^any|consumer_key_code|key_code$/ } @from_keys;
-  print Dumper \@from_keys;
-  if (!$has_key_code && grep { $_ =~ /modifiers/ } @from_keys) {
-    print Dumper 'aksjdkajsdf';
-    croak "You cannot have modifiers without anything to modify in a 'from' action.";
+
+  if (! defined $from) {
+    croak "No 'from' action found in the manipulator. You must add a 'from' action.'";
   }
+
+  if (! %$from) {
+    croak "The 'from' action is empty. Perform methods on the 'from' action to tell it how to behave.";
+  }
+
+  return;
+
+#  my @from_keys = keys %$from;
+#  my $has_key_code = grep { $_ =~ /^any|consumer_key_code|key_code$/ } @from_keys;
+#  print Dumper \@from_keys;
+#  if (!$has_key_code && grep { $_ =~ /modifiers/ } @from_keys) {
+#    print Dumper 'aksjdkajsdf';
+#    croak "You cannot have modifiers without anything to modify in a 'from' action.";
+#  }
 }
 
 # ABSTRACT: manipulator object for containing and outputting its data
