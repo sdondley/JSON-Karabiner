@@ -1,6 +1,7 @@
 Revision history for JSON-Karabiner
 
 {{$NEXT}}
+  - documentation corrections and improvements
 
 0.007
   - add validity checks to ensure 'from' actions exists and is populated
