@@ -1,4 +1,8 @@
-Revision history for JSON-Karabiner
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
+  - fix POD error
+  - documentation improvements
 
 0.003     2020-05-14 02:26:29-04:00 America/New_York
   - alpha release
