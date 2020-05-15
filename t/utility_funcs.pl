@@ -4,8 +4,9 @@ use warnings;
 sub gen_def {
   my $type = shift;
   my $obj = JSON::Karabiner->new('some_title', 'file.json');
-  my $def = $obj->add_rule('some desc')->add_manipulator->add_action($type);
-  return ($obj, $def);
+  my $manip = $obj->add_rule('some desc')->add_manipulator;
+  my $action = $manip->add_action($type);
+  return ($obj, $action, $manip);
 }
 
 sub gen_cond {
