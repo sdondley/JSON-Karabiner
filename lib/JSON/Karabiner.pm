@@ -45,6 +45,7 @@ sub _fake_write_file {
   my $s = shift;
   $s->{_fake_write_flag} = 1;
   $s->write_file;
+  $s->{_fake_write_flag} = 0;
 }
 
 sub write_file {

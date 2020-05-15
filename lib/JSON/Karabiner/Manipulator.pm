@@ -15,6 +15,7 @@ sub new_manipulator {
     actions => {},
     _disable_validity_tests => 0,
     _kb_obj_args => \@kb_obj_args,
+    _fake_write_flag => 0,
   };
   bless $self, $class;
   return $self;
@@ -118,9 +119,8 @@ sub _do_validity_checks {
   $s->_do_from_validity_checks($from);
 }
 
-sub _dump_json {
-  use Data::Dumper qw(Dumper);
 
+sub _dump_json {
   my $s = shift;
   my @kb_obj_args = @{$s->{_kb_obj_args}};
   if (!@kb_obj_args) {
@@ -128,15 +128,54 @@ sub _dump_json {
   }
 
   require JSON::Karabiner;
+  my $little_title = shift @kb_obj_args;
+  unshift @kb_obj_args, 'SET WITH write_file METHOD';
   my $kb_obj = JSON::Karabiner->new( @kb_obj_args );
-  my $rule = $kb_obj->add_rule('fake rule name');
+
+  my $rule = $kb_obj->add_rule($little_title);
   my $temp_manip = $rule->add_manipulator();
   %{$temp_manip} = %{$s};
   $kb_obj->_dump_json;
 }
 
+sub write_file {
+  my $s = shift;
+  my @kb_obj_args = @{$s->{_kb_obj_args}};
+  if (!@kb_obj_args) {
+    croak "The _write_file method cannot be run on this manipulator.";
+  }
 
+  my $title = shift;
+  croak 'You must supply a title for the rules you created' if !$title;
 
+  require JSON::Karabiner;
+  my $little_title = shift @kb_obj_args;
+  unshift @kb_obj_args, 'SET WITH write_file METHOD';
+  my $kb_obj = JSON::Karabiner->new( @kb_obj_args );
+  if ($s->{_fake_write_flag}) {
+    $kb_obj->{_fake_write_flag} = 1;
+  }
+  my $rule = $kb_obj->add_rule($little_title);
+  my $temp_manip = $rule->add_manipulator();
+  %{$temp_manip} = %{$s};
+  $kb_obj->write_file;
+  $kb_obj->{_fake_write_flag} = 0;
+
+}
+
+sub _fake_write_file {
+  my $s = shift;
+  my $title = shift;
+
+  my @kb_obj_args = @{$s->{_kb_obj_args}};
+  if (!@kb_obj_args) {
+    croak "The _fake_write method cannot be run on this manipulator.";
+  }
+
+  $s->{_fake_write_flag} = 1;
+  $s->write_file($title);
+  $s->{_fake_write_flag} = 0;
+}
 
 sub _do_from_validity_checks {
   my $s = shift;
