@@ -14,7 +14,7 @@ do 't/utility_funcs.pl';
 
 
 
-my $tests = 9; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 14; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
 
@@ -23,6 +23,11 @@ lives_ok { $manip = new_manipulator('little title', 'file.json'); } 'can create 
 my $from;
 lives_ok { $from = $manip->add_action('from') } 'can add a from action';
 lives_ok { $from->add_key_code('t') } 'can add a from action';
+lives_ok { add_action('to') } 'can use DSL for adding actions';
+lives_ok { add_condition('device_if') } 'can use DSL for adding conditions';
+lives_ok { add_key_code('x') } 'can use DSL for adding data to actions';
+dies_ok { add_nonsense('x') } 'does not run invalid methods';
+lives_ok { add_key_code 'y' } 'can use DSL without parens';
 
 lives_ok { $manip->_fake_write_file('A title') } 'can fake write a file with manipulator';
 lives_ok { $manip->_dump_json; } 'can _dump_json with manipulator';

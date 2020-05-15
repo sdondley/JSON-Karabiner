@@ -21,7 +21,13 @@ sub new {
 
 sub add_key_code {
   my $s = shift;
-  my @key_codes = @_;
+  my @key_codes;
+  if (ref $s) {
+    @key_codes = @_;
+  } else {
+    @key_codes = ($s, @_);
+    $s = $main::current_action;
+  }
   my $last_arg = $key_codes[-1];
   my $input_type = 'key_code';
   if ($last_arg && $last_arg =~ /^any|consumer_key_code|pointing_button$/) {

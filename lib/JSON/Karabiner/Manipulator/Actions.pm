@@ -19,6 +19,10 @@ sub new {
 
   };
   bless $self, $class;
+  {
+    no warnings 'once';
+    $main::current_action = $self;
+  }
   return $self;
 }
 

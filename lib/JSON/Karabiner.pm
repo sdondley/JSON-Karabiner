@@ -50,9 +50,25 @@ sub _fake_write_file {
 
 sub write_file {
   my $s = shift;
+  my $using_dsl = ((caller(0))[0] eq 'JSON::Karabiner::Manipulator');
   my $file = $s->{_file};
   my $dir = $s->{_mod_file_dir};
   my $destination = $dir . $file;
+
+  if ($using_dsl) {
+    my $rule = $s->{_karabiner}{rules};
+    if (!@main::saved_manips) {
+      @main::saved_manips = ();
+    }
+    foreach my $r (@$rule) {
+      foreach my $manip ($r->{manipulators}) {
+        push @main::saved_manips, @{$manip};
+      }
+    }
+
+    @{$s->{_karabiner}->{rules}} = @main::saved_manips;
+  }
+
   my $json = $s->_get_json();
 
   #TODO ensure it works with utf8

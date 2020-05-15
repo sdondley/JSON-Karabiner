@@ -15,12 +15,15 @@ sub new {
 
   };
   bless $self, $class;
+  {
+    no warnings 'once';
+    $main::current_condition = $self;
+  }
   return $self;
 }
 
 sub TO_JSON {
   my $obj = shift;
-  use Data::Dumper qw(Dumper);
   my $name = $obj->{def_name};
   my $value = $obj->{data};
   my @data_hash = @{$obj->{data}};
