@@ -69,33 +69,145 @@ write will add data to the manipulator data structure. `JSON::Karabiner` can the
 write the JSON to a file and then you can load the rules you've written using
 the Kabrabiner-Elements program.
 
-Below are descriptions of the methods you use to generate the json file.
-There are three important methods to know:
+Below are descriptions of the methods used on manipulators.
 
 - `add_action` method
 
-    for adding the from/to actions to the Karabiner manipulator data structure
+    for adding the from/to actions to the manipulator
 
 - `add_condition` method
 
-    for adding condtions to the manipulator structure
+    for adding manipulator conditions
 
 - `add_parameter` method
 
-    for adding parameters to the manipulator data structure
+    for adding maniplator parameters
 
-It will be very helpful if you have a basic familiarity with the Karabiner manipulator
-definition. See the [Karabiner complex\_modification manipulator documentation](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/) for more information.
+- `add_description` method
 
-The documentation below is not exhaustive. You'll also need to consult the documentation at:
+    for adding a description to the manipulator
+
+After running one of the four methods, the next step is to run additional methods
+that will be applied to the last action or condition you added.
+
+It will be very helpful if you have a basic familiarity with the Karabiner
+manipulator definition to gain an understanding of which methods to run. See the
+[Karabiner complex\_modification manipulator
+documentation](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/)
+for more information.
+
+## DSL Interface
+
+As of version 0.011, JSON::Karabiner moved to a DSL (domain specific language)
+interface to make writing scripts exceedingly easy. Please see the ["SYNOPSIS"](#synopsis) for an
+example of how to use the DSL. Full documention of the DSL will be available
+shortly. The older, object-oriented interface is still available below so it can be referred
+until the new documentation is releases. Note that the older object-oriented
+interface is still fully funcitonal (or should be, in theory).
+
+## How to Use the DSL Interface
+
+There are two parts to the inteface: the method and the list of arguments you are
+passing to the method. Methods that add data to the Karabiner json file begin with
+`add_` followed by a string of characters that corresponds to properties outlined
+in the Karabiner documentation. For example, to add a `key_code` property, you write:
+
+    add_key_code('t');
+
+It bears repeating that methods that apply to actions (or condtions) are automatically
+assigned to the **last action (or condition) that was created**.
+In other words, if your have:
+
+    add_action 'to';
+    add_action 'from';
+    add_key_code 'x';
+
+The key code will be added to the `from` action. If you wish apply it to the `to`
+action, simply move the `add_key_code` line immediately after the `to` action. This
+same rule applies for condtions as well as actions. Any method that adds data
+to a condtion will get added to the last condition created.
+
+### List of Methods for Actions
+
+The following methods apply to actions (e.g. `from`, `to`, `to_if_alone` etc.)
+
+#### From methods
+
+The following methods are for the `from` action:
+
+- add\_any
+- add\_consumer\_key\_code
+- add\_key\_code
+- add\_mandatory\_modifiers
+- add\_optional\_modifiers
+- add\_pointing\_button
+- add\_simultaneous
+- add\_simultaneous\_options
+
+#### To methods
+
+The following methods are for the `to` action (includes `to_if_alone`, `to_if_held_down`
+`to_after_key_up`, `to_delayed_if_invoked`, `to_delayed_if_canceled`):
+
+- add\_consumer\_key\_code
+- add\_key\_code
+- add\_modifiers
+- add\_mouse\_key
+- add\_pointing\_button
+- add\_select\_input\_source
+- add\_set\_variable
+- add\_shell\_command
+
+#### Condition methods
+
+- add\_bundle\_identifiers
+- add\_description
+- add\_file\_path
+- add\_identifier
+- add\_input\_source
+- add\_keyboard\_types
+- add\_value
+- add\_variable
+
+For further details on each these methods, including the arguments they take,
+please see that appropriate perl doc page:
 
 - [from action](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::From)
 - [to action](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::To)
 - [conditions](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Conditions)
 
-These pages document the methods for actions and conditions.
+### Multiple manipulators
 
-But the best way to learn, of course, is to experiment and see what happens.
+The DSL interface makes it easy to include multiple manipulator in a single rule.
+Follow this patter:
+
+    new_manipulator('Turn x key into y key', 'name_of_file.json');
+
+    ... Run methods for above manipulator here ...
+
+    write_file('Name of Rule');
+
+    new_manipulator('Turn a key into by key', 'name_of_file.json');
+
+    ... Run methods for the second manipulator here ...
+
+    write_file('');
+
+    ... Add N more manipulators here ...
+
+Just be sure the manipulators all have the same file name so they will be
+included in the same file.
+
+Notice that only the first `write_file` method requires the name of the rule
+to be passed. Subsequent calls to `write_file` will inherit the title from
+the first manipulator written.
+
+### Writing the JSON
+
+As shown in the example above, a `write_file` call must be made for each
+manipulator in your script to have it included in the JSON file. The title is
+required to be supplied to the first manipulator. Subsequent `write_file`
+calls will use the first title.
 
 # METHODS
 
@@ -111,25 +223,6 @@ out the current state of your json without writing it to a file.
 
 The new DSL Interface, as demonstrated in the ["SYNOPSIS"](#synopsis), should be used instead
 of the old object-oriented interface.
-
-## DSL Interface
-
-As of version 0.011, JSON::Karabiner moved to a DSL (domain specific language)
-interface to make writing scripts even easier. Please see the ["SYNOPSIS"](#synopsis) for an
-example of how to use the DSL. Full documention of the DSL will be available
-shortly. The older, object-oriented interface is left below so it can be referred
-to while the new documentation is under development. Note that the older object-oriented
-interface is still fully funcitonal (or should be, in theory).
-
-It's important to note that action methods apply to **last action that was created**.
-In other words, if your have:
-
-    add_action 'to';
-    add_action 'from';
-    add_key_code 'x';
-
-The key code will be applied to the `from` action. If you wish apply it to the `to`
-action, simply move the `add_key_code` line immediately after the `to` action.
 
 ## DEPRECATED Object-Oriented Interface
 
@@ -315,7 +408,7 @@ modules](https://www.cpan.org/modules/INSTALL.html) for more information.
 
 # VERSION
 
-version 0.012
+version 0.013
 
 # Development Status
 
