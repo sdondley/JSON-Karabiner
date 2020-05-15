@@ -5,45 +5,38 @@ JSON::Karabiner - easy JSON code generation for Karabiner-Elements
 # SYNOPSIS
 
 Below is an example of an executable perl script for generating a json file for
-use by Karbiner-Elements. You can copy and paste this code to your local machine and
+use by Karabiner-Elements. You can copy and paste this code to your local machine and
 execute it. Feel free to modify it to your liking. Note that you must first
 install the `JSON::Karabiner` package (see the ["INSTALLATION"](#installation) section below).
 
-Hopefully it is simple enough to understand even if you have no experience with
-programming in Perl. Read through the code below and see if you can determine
-what it will do. Don't hesitate to [file an issue](https://github.com/sdondley/JSON-Karabiner/issues)
-if you need asssistance.
+This script is easy to understand even if you have no experience with Perl or
+any programming langauge, for that matter. Read through the code below and see
+if you can determine what it will do. Don't hesitate to [file an
+issue](https://github.com/sdondley/JSON-Karabiner/issues) if you need
+asssistance.
 
-    #!/usr/bin/env perl   # shebang line so this program is opened with perl interpreter
-    use JSON::Karabiner;  # The JSON::Karabiner Perl package must be installed on your machine
+    #!/usr/bin/env perl                # shebang line so this program is opened with perl interpreter
+    use JSON::Karabiner::Manipulator;  # The JSON::Karabiner Perl package must be installed on your machine
 
-    use strict;    # always set these in perl for your
-    use warnings;  # own sanity
+    # Create a new manipulator object with a description and the file you want to save it to
+    new_manipulator('a-s-d to show character viewer', 'my_awesome_karabiner_mod.json');
 
-    # Create an object by passing it a title and the name of the file you will write to:
-    my $kb_obj = JSON::Karabiner->new('Typing assists', 'my_awesome_karbiner_mod.json');
+    # Add a from action to the manipulator:
+    add_action 'from';
 
-    # Now add a rule and give it a description:
-    my $rule = $kb_obj->add_rule('a-s-d to show character viewer');
+    # Add behaviors to the action:
+    add_simultaneous 'a', 's', 'd';
+    add_optional_modifiers 'any';
 
-    # Add a manipulator to the rule:
-    my $manip_1 = $rule->add_manipulator;
-
-    # Add a "from" and "to" action to the manipulator
-    my $from = $manip_1->add_action('from');
-    my $to = $manip_1->add_action('to');
-
-    # Tell the "from" action what to do
-    $from->add_simultaneous('a', 's', 'd');
-    $from->add_optional_modifiers('any');
+    # Add a "to" action to the manipulator:
+    add_action 'to';
 
     # Tell the "to" action what to do
-    $to->add_key_code('spacebar');
-    $to->add_modifiers('control', 'command');
+    add_key_code('spacebar');
+    add_modifiers('control', 'command');
 
-    # Done! Now it's time to write the file:
-
-    $kb_obj->write_file;
+    # Done! Now it's time to write the file and give the rule a title:
+    write_file('Emoji Character Viewer');
 
 Save this above code to a file on your computer and be sure to make the script executable with:
 
@@ -55,24 +48,24 @@ Then execute this script with:
 
 from the same directory where this script is saved.
 
-After this script is run, a json file called my\_awesome\_karbiner\_mod.json
+After this script is run, a json file called my\_awesome\_karabiner\_mod.json
 should now be sitting in the assets/complex\_modifications directory. Open
-the Karabiner-Elements app on your Mac to install the new rules.
+the Karabiner-Elements app on your Mac to install the new rule.
 
 Ready to give is try? Follow the ["INSTALLATION"](#installation) instructions to get started.
 
 # DESCRIPTION
 
 Karabiner stores rules for its modifications in a file using a data format
-known as JSON which is painstaking to edit and create. JSON::Karbiner eases the
-pain by letting Perl write the JSON for you. If you aren't familar with
-Perl, or programming at all, don't worry. There are examples provided that you
-can follow so no programming knowledge should be necessary. The 10 or 20 minutes
-you spend learning how to install and use this module will pay off in spades.
+known as JSON which is painstaking to edit and create. JSON::Karabiner eases the
+pain by letting Perl write the JSON for you. If you aren't familar with Perl, or
+programming at all, don't worry. There are examples provided that you can follow
+so no programming knowledge is necessary. The 10 or 20 minutes you spend
+learning how to install and use this module will pay off in spades.
 
-A Karbiner JSON complex modification file stores the rules for modifying the keyboard
-in a data structure called the "manipulators." Therefore, most of Perl code you
-write adds data to the manipulator data structure. `JSON::Karabiner` can then
+A Karabiner JSON complex modification file stores the rules for modifying the keyboard
+in a data structure called the "manipulators." Therefore, most of methods you
+write will add data to the manipulator data structure. `JSON::Karabiner` can then
 write the JSON to a file and then you can load the rules you've written using
 the Kabrabiner-Elements program.
 
@@ -81,17 +74,17 @@ There are three important methods to know:
 
 - `add_action` method
 
-    for adding the from/to actions to the Karbiner manipulator data structure
+    for adding the from/to actions to the Karabiner manipulator data structure
 
 - `add_condition` method
 
     for adding condtions to the manipulator structure
 
-- `add_parameters` method
+- `add_parameter` method
 
     for adding parameters to the manipulator data structure
 
-It will be very helpful if you have a basic familiarity with the Karbiner manipulator
+It will be very helpful if you have a basic familiarity with the Karabiner manipulator
 definition. See the [Karabiner complex\_modification manipulator documentation](https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/) for more information.
 
 The documentation below is not exhaustive. You'll also need to consult the documentation at:
@@ -109,52 +102,78 @@ But the best way to learn, of course, is to experiment and see what happens.
 Below are the methods for the Karabiner, Rule, and Manipulator classes. The
 classes are used to create objects that you then run methods on.
 
-First, you create your Karabiner object, then add a rule object to it, and then
-you add one or more manipulators to the rule. Then you add your actions,
-conditions and paramaters to manipulators.
-
 Together, these methods create one large data structure that gets written to
 the json file. A good way to get a feel for how this works is to write just a
 little bit of Perl code, write it to a file, and then look at the file. Then add
 a little bit more Perl code, run the script again, and see what happens. You can
-also use the undocumented `_dump_json` method on the Karbiner object to spit
-out it's current state: `$kb_obj-<E<t>_dump_json`.
+also add the undocumented `_dump_json` method to your script to spit
+out the current state of your json without writing it to a file.
 
-## Karabiner Object Methods
+The new DSL Interface, as demonstrated in the ["SYNOPSIS"](#synopsis), should be used instead
+of the old object-oriented interface.
 
-### new($title, $file, \[ { mod\_file\_dir => $path\_to\_dir } \] )
+## DSL Interface
 
-    my $kb_obj = JSON::Karbiner->new('title', 'file.json');
+As of version 0.011, JSON::Karabiner moved to a DSL (domain specific language)
+interface to make writing scripts even easier. Please see the ["SYNOPSIS"](#synopsis) for an
+example of how to use the DSL. Full documention of the DSL will be available
+shortly. The older, object-oriented interface is left below so it can be referred
+to while the new documentation is under development. Note that the older object-oriented
+interface is still fully funcitonal (or should be, in theory).
 
-The new method creates the Karbiner object that holds the entire data structure.
+It's important to note that action methods apply to **last action that was created**.
+In other words, if your have:
+
+    add_action 'to';
+    add_action 'from';
+    add_key_code 'x';
+
+The key code will be applied to the `from` action. If you wish apply it to the `to`
+action, simply move the `add_key_code` line immediately after the `to` action.
+
+## DEPRECATED Object-Oriented Interface
+
+### Karabiner Object Methods DEPRECATED
+
+#### new($title, $file, \[ { mod\_file\_dir => $path\_to\_dir } \] )
+
+    my $kb_obj = JSON::Karabiner->new('title', 'file.json');
+
+The new method creates the Karabiner object that holds the entire data structure.
 This should be the first command you issue in your scipt.
 
 The $title and $file arguments are required. An optional third argument, set
-inside curly braces, can be passed to change the default Karbiner directory
+inside curly braces, can be passed to change the default Karabiner directory
 which is set to:
 
     ~/.config/karabiner/assets/complex_modifications/
 
 You must pass this third argument inside the curly brackes as shown in this example:
 
-    my $kb_obj = JSON::Karbiner->new('title', 'file.json', { mod_file_dir => '/path/to/dir' } ));
+    my $kb_obj = JSON::Karabiner->new('title', 'file.json', { mod_file_dir => '/path/to/dir' } ));
 
-If you are using a non-standard location for your Karbiner install, you must
-change this directory to where Karbiner stores its modifications on your local
+If you are using a non-standard location for your Karabiner install, you must
+change this directory to where Karabiner stores its modifications on your local
 machine by setting `mod_file_dir` option to the correct path on your drive.
 
-### write\_file()
+Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
+exmaple in SYNOPSI).
+
+#### write\_file() DEPRECATED
 
 This will generally be the last command in your script:
 
     $kb_obj->write_file();
 
 Once the file is written, you should be able to add the rules from your script
-using the Karbiner-Elements program. If it does not appear there, first check
+using the Karabiner-Elements program. If it does not appear there, first check
 to make sure the file is saving to the right directory. If it still doesn't work,
 please open an issue on GitHub and post your perl script as it may be a bug.
 
-### add\_rule($rule\_title)
+Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
+example in the SYNOPSIS).
+
+#### add\_rule($rule\_title) DEPRECATED
 
 Every Karabiner json file has a rules data structure which contains all the
 modifications. Add it to your object like so:
@@ -163,9 +182,12 @@ modifications. Add it to your object like so:
 
 Set the title of the rule by passing it a string set in quotes.
 
-## Rule Methods
+Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
+example in the SYNOPSIS).
 
-### add\_manipulator()
+#### Rule Methods DEPRECATED
+
+#### add\_manipulator() DEPRECATED
 
 A manipulator must be added to the Rule object to do anything useful:
 
@@ -174,9 +196,9 @@ A manipulator must be added to the Rule object to do anything useful:
 Once done, you can add actions, conditions, and parameters to your manipulator. See
 below for more information.
 
-## Manipulator Methods
+### Manipulator Methods DEPRECATED
 
-### add\_action($type)
+#### add\_action($type) DEPRECATED
 
 There are seven different types of actions you can add:
 
@@ -191,7 +213,7 @@ There are seven different types of actions you can add:
 The major ones are the first four listed above. You must create a `from` action to
 your manipulator. This the actions that contains the keystrokes you want to change.
 The other `to` actions describe what the `from` keystroke actions will be changed
-into. See the Karbiner documentation for more information on these actions.
+into. See the Karabiner documentation for more information on these actions.
 
 Once these actions are created, you may apply methods to them to add additional
 data. Consult the documentation for the different actions for a listing and
@@ -200,7 +222,7 @@ description of those methods:
 - [JSON::Karabiner::Manipulator::Actions::From](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::From)
 - [JSON::Karabiner::Manipulator::Actions::To](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Actions::To)
 
-### add\_condition($type)
+### add\_condition($type) DEPRECATED
 
 Conditions make the modification conditional upon some other bit of data. You
 can add the following types of conditions:
@@ -222,7 +244,7 @@ conditions and the types of methods they use:
 
 [JSON::Karabiner::Manipulator::Conditions](https://metacpan.org/pod/JSON::Karabiner::Manipulator::Conditions)
 
-### add\_parameter($name, $value)
+#### add\_parameter($name, $value) DEPRECATED
 
 Parameters are used by Karabiner to change various timing aspects of the actions. Four
 different parameters may be set:
@@ -234,7 +256,7 @@ different parameters may be set:
 
 See the Karabiner documentation for more details.
 
-### add\_description($description)
+#### add\_description($description) DEPRECATED
 
 Adds a description to the manipulator data structure:
 
@@ -293,16 +315,16 @@ modules](https://www.cpan.org/modules/INSTALL.html) for more information.
 
 # VERSION
 
-version 0.010
+version 0.011
 
 # Development Status
 
-This module is currently in the early alpha stages and is actively supported and
+This module is currently in alpha release and is actively supported and
 maintained. Suggestion for improvement are welcome. It is known to generate
-valid JSON that allow Karabiner to import rules from the file generated for
-simple cases.
+valid JSON that allow Karabiner to import rules from the file generated for at
+least simple cases and probably more advanced cases as well.
 
-Many improvements are in the works.
+Many improvements are in the works. Please watch us on GitHub.
 
 # SUPPORT
 
@@ -357,11 +379,3 @@ This software is copyright (c) 2020 by Steve Dondley.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
-
-# POD ERRORS
-
-Hey! **The above document had some coding errors, which are explained below:**
-
-- Around line 128:
-
-    Unknown E content in E&lt;t>
