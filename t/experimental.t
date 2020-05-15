@@ -1,7 +1,6 @@
 #/usr/bin/env perl
 use Test::Most;
 use JSON::Karabiner::Manipulator;
-use JSON::Karabiner;
 do 't/utility_funcs.pl';
 
 

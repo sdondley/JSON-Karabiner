@@ -12,7 +12,6 @@ sub new_manipulator {
 
   my @kb_obj_args = @_;
   use Data::Dumper qw(Dumper);
-  print Dumper \@kb_obj_args;
   my $self = {
     actions => {},
     _disable_validity_tests => 0,
