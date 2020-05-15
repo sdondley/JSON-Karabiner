@@ -2,7 +2,7 @@ package JSON::Karabiner::Rule ;
 
 use strict;
 use warnings;
-use JSON::Karabiner::Manipulator ;
+require JSON::Karabiner::Manipulator ;
 use Carp;
 
 sub new {
@@ -35,7 +35,7 @@ sub _enable_validity_tests {
 sub add_manipulator {
   my $s = shift;
 
-  my $manip  = JSON::Karabiner::Manipulator->new($s->{manipulators});
+  my $manip  = JSON::Karabiner::Manipulator->new_manipulator();
   push @{$s->{manipulators}}, $manip;
   return $manip;
 }
