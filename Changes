@@ -1,5 +1,11 @@
 Revision history for JSON-Karabiner
 
+0.012
+  - fix smoke tests (again)
+
+0.011
+  - add experimental DSL feature
+
 0.010     2020-05-15 08:31:05-04:00 America/New_York
   - fix directory check bug
   - satisfy smoke testers
