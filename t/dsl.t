@@ -28,7 +28,7 @@ add_key_code 'y';
 
 _dump_json;
 
-write_file('Some title');
+_fake_write_file('Some title');
 
 lives_ok { new_manipulator('Manip 2 Title', 'file.json'); } 'can add a new manipulator';
 add_action 'from';
