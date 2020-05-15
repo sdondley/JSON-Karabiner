@@ -3,12 +3,20 @@ package JSON::Karabiner::Manipulator ;
 use strict;
 use warnings;
 use Carp;
+use Exporter 'import';
+our @EXPORT = 'new_manipulator';
 
-sub new {
-  my $class = shift;
+sub new_manipulator {
+  my $class = 'JSON::Karabiner::Manipulator';
+  shift if $_[0] =~ /^JSON::Karabiner::Manipulator$/;
+
+  my @kb_obj_args = @_;
+  use Data::Dumper qw(Dumper);
+  print Dumper \@kb_obj_args;
   my $self = {
     actions => {},
     _disable_validity_tests => 0,
+    _kb_obj_args => \@kb_obj_args,
   };
   bless $self, $class;
   return $self;
@@ -111,6 +119,27 @@ sub _do_validity_checks {
   my $from = $actions->{from};
   $s->_do_from_validity_checks($from);
 }
+
+sub _dump_json {
+  use Data::Dumper qw(Dumper);
+
+  my $s = shift;
+  print Dumper \@_;
+  my @kb_obj_args = @{$s->{_kb_obj_args}};
+  print Dumper \@kb_obj_args;
+  if (!@kb_obj_args) {
+    croak "The _dump_json method cannot be run on this manipulator.";
+  }
+
+  require JSON::Karabiner;
+  my $kb_obj = JSON::Karabiner->new( @kb_obj_args );
+  my $rule = $kb_obj->add_rule('fake rule name');
+  my $temp_manip = $rule->add_manipulator();
+  %{$temp_manip} = %{$s};
+  $kb_obj->_dump_json;
+}
+
+
 
 
 sub _do_from_validity_checks {

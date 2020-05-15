@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use JSON;
 use Carp;
+use File::HomeDir;
 use JSON::Karabiner::Rule;
 
 sub new {
@@ -20,9 +21,10 @@ sub new {
   croak 'JSON::Karabiner constructor requires a title for the modification.' if !$title;
   croak 'JSON::Karabiner constructor requires a file name.' if !$file;
   croak 'File names are required to have a .json extenstion' if $file !~ /\.json$/;
+  my $home = File::HomeDir->my_home;
   my $self = {
     _file => $file,
-    _mod_file_dir => $opts->{mod_file_dir} || "$ENV{HOME}/.config/karabiner/assets/complex_modifications/",
+    _mod_file_dir => $opts->{mod_file_dir} || "$home/.config/karabiner/assets/complex_modifications/",
     _karabiner => { title => $title, rules => [] },
     _fake_write_flag => 0,
     _rule_obj => '',
