@@ -1,7 +1,7 @@
 #/usr/bin/env perl
 use Test::Most;
 use JSON::Karabiner;
-
+use File::HomeDir;
 
 
 
@@ -29,7 +29,8 @@ dies_ok { JSON::Karabiner->new('title', 'some_file') } 'dies when file does not 
 
 is 'some_file.json', JSON::Karabiner->new('title', 'some_file.json')->{_file}, 'sets file';
 
-is "$ENV{HOME}/.config/karabiner/assets/complex_modifications/", JSON::Karabiner->new('title', 'some_file.json')->{_mod_file_dir}, 'sets mod path';
+my $home = File::HomeDir->my_home;
+is "$home/.config/karabiner/assets/complex_modifications/", JSON::Karabiner->new('title', 'some_file.json')->{_mod_file_dir}, 'sets mod path';
 
 SKIP: {
   skip 'probably a windows machine', 1 if (!-d '/tmp');
