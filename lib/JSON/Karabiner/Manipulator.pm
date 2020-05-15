@@ -11,8 +11,6 @@ sub new_manipulator {
   shift if $_[0] =~ /^JSON::Karabiner::Manipulator$/;
 
   my @kb_obj_args = @_;
-  use Data::Dumper qw(Dumper);
-  print Dumper \@kb_obj_args;
   my $self = {
     actions => {},
     _disable_validity_tests => 0,
@@ -124,9 +122,7 @@ sub _dump_json {
   use Data::Dumper qw(Dumper);
 
   my $s = shift;
-  print Dumper \@_;
   my @kb_obj_args = @{$s->{_kb_obj_args}};
-  print Dumper \@kb_obj_args;
   if (!@kb_obj_args) {
     croak "The _dump_json method cannot be run on this manipulator.";
   }
