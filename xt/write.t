@@ -31,4 +31,4 @@ write_file('some test');
 
 is (-f $file, 1, 'writes the file');
 
-#unlink $file;
+unlink $file;
