@@ -65,10 +65,11 @@ sub write_file {
         push @main::saved_manips, @{$manip};
       }
     }
+    use Data::Dumper qw(Dumper);
+    print Dumper $s->{_karabiner}->{rules}[0];
 
-    @{$s->{_karabiner}->{rules}} = @main::saved_manips;
+    @{$s->{_karabiner}->{rules}[0]{manipulators}} = @main::saved_manips;
   }
-
   my $json = $s->_get_json();
 
   #TODO ensure it works with utf8
