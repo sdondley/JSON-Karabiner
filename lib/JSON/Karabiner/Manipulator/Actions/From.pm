@@ -132,14 +132,11 @@ __END__
 
 =head1 SYNOPSIS
 
-  use JSON::Karabiner;
+  add_action('from');
 
-  my $from_action = $manip_obj->add_action('from');
-
-  # Use methods to add data to the C<from> action:
-
-  $from_action->add_key_code('h');
-  $from_action->add_optional_modifiers('control', 'left_shift');
+  # Use methods to add data to the action:
+  add_key_code('h');
+  add_optional_modifiers('control', 'left_shift');
 
 =head1 DESCRIPTION
 
@@ -161,7 +158,7 @@ typically created via the manipulator object's C<add_action()> method.
 
 Add a C<key_code> property to a C<from> action:
 
-  $from->add_key_code('h');
+  add_key_code('h');
 
 See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/>
 
@@ -169,7 +166,7 @@ See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/j
 
 Add an C<any> property to a C<from> action:
 
-  $from->add_any($value);
+  add_any($value);
 
 See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/any/>
 
@@ -177,19 +174,19 @@ See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/j
 
 Add an C<consumer_key_code> property to a C<from> action:
 
-  $from->add_consumer_key_code('MUSIC_NEXT');
+  add_consumer_key_code('MUSIC_NEXT');
 
 =head3 add_pointing_button($value)
 
 Add an C<pointing_button> property to a C<from> action:
 
-  $from->add_pointing_button('button2');
+  add_pointing_button('button2');
 
 =head3 add_optional_modifiers(@values)
 
 Add an C<optional_modifiers> property to keycodes in a C<from> action:
 
-  $from->add_optional_modifiers('control', 'shift', 'command');
+  add_optional_modifiers('control', 'shift', 'command');
 
 See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/>
 
@@ -199,7 +196,7 @@ See official L<Karbiner documentation|>
 
 Add an C<mandatory_modifiers> property to keycodes in a C<from> action:
 
-  $from->add_mandatory_modifiers('shift', 'command');
+  add_mandatory_modifiers('shift', 'command');
 
 See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/>
 
@@ -207,11 +204,11 @@ See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/j
 
 Add an C<simultaneous> property to a C<from> action:
 
-  $from->add_simultaneous('a', 'j');
+  add_simultaneous('a', 'j');
 
 An optional C<key_code_type> can be passed in as the first argument:
 
-  $from->add_simulataneous('pointing_button', 'button1', 'button2')
+  add_simulataneous('pointing_button', 'button1', 'button2')
 
 If no C<key_code_type> value is detected, a default value of C<key_code> is used.
 
@@ -221,7 +218,7 @@ See official L<Karbiner documentation|https://karabiner-elements.pqrs.org/docs/j
 
 Add an C<simultaneous> property to a C<from> action:
 
-  $from->add_simultaneous_options('key_down_order', 'strict');
+  add_simultaneous_options('key_down_order', 'strict');
 
 Multiple options by set my calling this method multiple times.
 

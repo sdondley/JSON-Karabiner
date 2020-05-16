@@ -190,14 +190,14 @@ modules|https://www.cpan.org/modules/INSTALL.html> for more information.
 
 =head1 SYNOPSIS
 
-Below is an example of an executable perl script for generating a json file for
-use by Karabiner-Elements. You can copy and paste this code to your local machine and
-execute it. Feel free to modify it to your liking. Note that you must first
-install the C<JSON::Karabiner> package (see the L</"INSTALLATION"> section below).
+Below is an executable perl script that generates a json file that can be read
+by by L<Karabiner-Elements|https://karabiner-elements.pqrs.org>. You can copy
+and paste this code to your local machine,modify it if you wish, and execute it.
+Note that you must first install the C<JSON::Karabiner> package
+(see the L</"INSTALLATION"> section below).
 
-This script is easy to understand even if you have no experience with Perl or
-any programming langauge, for that matter. Read through the code below and see
-if you can determine what it will do. Don't hesitate to L<file an
+This script is easy to understand even if you have no experience with Perl, or
+any programming langauge, for that matter. But don't hesitate to L<file an
 issue|https://github.com/sdondley/JSON-Karabiner/issues> if you need
 asssistance.
 
@@ -224,7 +224,7 @@ asssistance.
   # Done! Now it's time to write the file and give the rule a title:
   write_file('Emoji Character Viewer');
 
-Save this above code to a file on your computer and be sure to make the script executable with:
+Save this code to a file on your computer and be sure to make the script executable with:
 
   chmod 744 your_file_name.pl
 
@@ -277,8 +277,9 @@ for adding a description to the manipulator
 
 =back
 
-After running one of the four methods, the next step is to run additional methods
-that will be applied to the last action or condition you added.
+After you run a C<add_action> or C<add_condition> method, you will need to run
+additional methods that will be applied to the last action or condition you
+added.
 
 It will be very helpful if you have a basic familiarity with the Karabiner
 manipulator definition to gain an understanding of which methods to run. See the
@@ -289,23 +290,32 @@ for more information.
 =head2 DSL Interface
 
 As of version 0.011, JSON::Karabiner moved to a DSL (domain specific language)
-interface to make writing scripts exceedingly easy. Please see the L</SYNOPSIS> for an
-example of how to use the DSL. Full documention of the DSL will be available
-shortly. The older, object-oriented interface is still available below so it can be referred
-until the new documentation is releases. Note that the older object-oriented
-interface is still fully funcitonal (or should be, in theory).
+interface to make writing scripts even easier. Please see the L</SYNOPSIS>
+for an example of how to use the DSL. Note that the older object-oriented interface,
+though currently deprecated and undocumented, is still fully funcitonal (or
+should be, in theory).
 
 =head2 How to Use the DSL Interface
 
-There are two parts to the inteface: the method and the list of arguments you are
-passing to the method. Methods that add data to the Karabiner json file begin with
-C<add_> followed by a string of characters that corresponds to properties outlined
-in the Karabiner documentation. For example, to add a C<key_code> property, you write:
+There are two parts to a DSL inteface: the method and the list of arguments you
+are passing to the method. You can think of the method as the action you want to
+take and the arguments as the data "nouns" you want to store or process.
 
-  add_key_code('t');
+Methods that add data to the manipulator begin with C<add_> followed by
+a string of characters that corresponds to properties outlined in the Karabiner
+documentation. For example, to add a C<key_code> property, you write:
+
+  add_key_code 't';
+
+Here, the action is C<add_key_code> and the data is the character "t". Note that
+the method call must end in a semicolon. Each argument you pass must be
+surrounded by apostrophes. Or, if you want to avoid the pain of having to type
+apostrophers, you can use Perl's C<qw> function:
+
+  add_modifiers qw(control shift command);
 
 It bears repeating that methods that apply to actions (or condtions) are automatically
-assigned to the B<last action (or condition) that was created>.
+assigned to the B<most recent action (or condition) that was created>.
 In other words, if your have:
 
   add_action 'to';
@@ -371,7 +381,9 @@ C<to_after_key_up>, C<to_delayed_if_invoked>, C<to_delayed_if_canceled>):
 
 =back
 
-=head4 Condition methods
+=head3 List of Methods for Conditions
+
+The following methods will add data to the most recently created condition in the script.
 
 =over 4
 
@@ -394,7 +406,7 @@ C<to_after_key_up>, C<to_delayed_if_invoked>, C<to_delayed_if_canceled>):
 =back
 
 For further details on each these methods, including the arguments they take,
-please see that appropriate perl doc page:
+please see the appropriate perl doc page:
 
 =over 4
 
@@ -432,7 +444,7 @@ Notice that only the first C<write_file> method requires the name of the rule
 to be passed. Subsequent calls to C<write_file> will inherit the title from
 the first manipulator written.
 
-=head3 Writing the JSON
+=head3 Writing to the JSON file
 
 As shown in the example above, a C<write_file> call must be made for each
 manipulator in your script to have it included in the JSON file. The title is
@@ -441,106 +453,58 @@ calls will use the first title.
 
 =head1 METHODS
 
-Below are the methods for the Karabiner, Rule, and Manipulator classes. The
-classes are used to create objects that you then run methods on.
+=head2 new_manipulator($maniuplator_description, $file_name, [ { mod_file_dir => '/path_/to/dir' } ])
 
-Together, these methods create one large data structure that gets written to
-the json file. A good way to get a feel for how this works is to write just a
-little bit of Perl code, write it to a file, and then look at the file. Then add
-a little bit more Perl code, run the script again, and see what happens. You can
-also add the undocumented C<_dump_json> method to your script to spit
-out the current state of your json without writing it to a file.
+Example usage:
 
-The new DSL Interface, as demonstrated in the L</SYNOPSIS>, should be used instead
-of the old object-oriented interface.
+  new_manipulator 'Double tap shift for ⌘-f', 'double-taps.json', { mod_file_dir => '/some/dir' };
 
-=head2 DEPRECATED Object-Oriented Interface
+This method creates a new manipulator. It must be called before adding
+actions, condtisions and parameters. The method takes two required arguments: a
+description of the manipulator and the name of the file you with to save it to.
+A third argument for passing options to the maniplator, is optional.
 
-=head3 Karabiner Object Methods DEPRECATED
+=head3 Manipulator description
 
-=head4 new($title, $file, [ { mod_file_dir => $path_to_dir } ] )
+The description will be displayed in the Karabiner-Elements application. The
+description is used to let you know which rule is getting enabled/disabled. You
+should be descriptive here.
 
-  my $kb_obj = JSON::Karabiner->new('title', 'file.json');
+=head3 File name
 
-The new method creates the Karabiner object that holds the entire data structure.
-This should be the first command you issue in your scipt.
+This is the name of the file your manipulator will be saved in. If this file name
+is the same for other manipulators, those manipulators will be stored together
+in the same file. This file should end with the ".json" file extension.
 
-The $title and $file arguments are required. An optional third argument, set
-inside curly braces, can be passed to change the default Karabiner directory
-which is set to:
+=head3 Options
 
-  ~/.config/karabiner/assets/complex_modifications/
+Only one option is available, C<mod_file_dir>. This is needed only if you want to
+save your json file to a place other than the default, C<~/.config/karabiner/assets/complex_modifications>.
 
-You must pass this third argument inside the curly brackes as shown in this example:
+Note that options are passed as an anonymous has reference. What this means
+to you is that you have to place this option inside curly braces per the example
+above.
 
-  my $kb_obj = JSON::Karabiner->new('title', 'file.json', { mod_file_dir => '/path/to/dir' } ));
-
-If you are using a non-standard location for your Karabiner install, you must
-change this directory to where Karabiner stores its modifications on your local
-machine by setting C<mod_file_dir> option to the correct path on your drive.
-
-Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
-exmaple in SYNOPSI).
-
-=head4 write_file() DEPRECATED
-
-This will generally be the last command in your script:
-
-  $kb_obj->write_file();
-
-Once the file is written, you should be able to add the rules from your script
-using the Karabiner-Elements program. If it does not appear there, first check
-to make sure the file is saving to the right directory. If it still doesn't work,
-please open an issue on GitHub and post your perl script as it may be a bug.
-
-Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
-example in the SYNOPSIS).
-
-=head4 add_rule($rule_title) DEPRECATED
-
-Every Karabiner json file has a rules data structure which contains all the
-modifications. Add it to your object like so:
-
-  my $rule = $kb_obj->add_rule('My Cool Rule Title');
-
-Set the title of the rule by passing it a string set in quotes.
-
-Note: Thie method is DEPRECATED in favor of the new DSL approach (see the
-example in the SYNOPSIS).
-
-=head4 Rule Methods DEPRECATED
-
-=head4 add_manipulator() DEPRECATED
-
-A manipulator must be added to the Rule object to do anything useful:
-
-  my $manip = $rule->add_manipulator
-
-Once done, you can add actions, conditions, and parameters to your manipulator. See
-below for more information.
-
-=head3 Manipulator Methods DEPRECATED
-
-=head4 add_action($type) DEPRECATED
+=head2 add_action($type)
 
 There are seven different types of actions you can add:
 
-  my $from        = $manip->add_action('from');
-  my $to          = $manip->add_action('to');
-  my $to_alone    = $manip->add_action('to_if_alone');
-  my $to_down     = $manip->add_action('to_if_held_down');
-  my $to_up       = $manip->add_action('to_after_key_up');
-  my $to_invoked  = $manip->add_action('to_delayed_if_invoked');
-  my $to_canceled = $manip->add_action('to_delayed_if_canceled');
+  add_action('from');
+  add_action('to');
+  add_action('to_if_alone');
+  add_action('to_if_held_down');
+  add_action('to_after_key_up');
+  add_action('to_delayed_if_invoked');
+  add_action('to_delayed_if_canceled');
 
-The major ones are the first four listed above. You must create a C<from> action to
-your manipulator. This the actions that contains the keystrokes you want to change.
+The most frequently uses actions are the first four listed above. You must create a C<from> action to
+your manipulator. The C<from> action contains the keystrokes you want to modify.
 The other C<to> actions describe what the C<from> keystroke actions will be changed
 into. See the Karabiner documentation for more information on these actions.
 
-Once these actions are created, you may apply methods to them to add additional
-data. Consult the documentation for the different actions for a listing and
-description of those methods:
+Once these actions are created, you may run methods to that add additional data
+to them to modify their behavior. Consult the documentation for the different
+actions for a listing and description of those methods:
 
 =over 4
 
@@ -550,45 +514,67 @@ description of those methods:
 
 =back
 
-=head3 add_condition($type) DEPRECATED
+=head2 add_condition($type)
 
 Conditions make the modification conditional upon some other bit of data. You
 can add the following types of conditions:
 
-  $manip->add_condition('device_if');
-  $mainp->add_condition('device_unless')
-  $manip->add_condition('event_changed_if')
-  $manip->add_condition('frontmost_application_if')
-  $manip->add_condition('frontmost_application_unless')
-  $manip->add_condition('input_source_if')
-  $manip->add_condition('input_source_unless')
-  $manip->add_condition('keyboard_type_if')
-  $manip->add_condition('variable_if')
-  $manip->add_condition('variable_unless')
+  add_condition('device_if');
+  add_condition('device_unless')
+  add_condition('event_changed_if')
+  add_condition('frontmost_application_if')
+  add_condition('frontmost_application_unless')
+  add_condition('input_source_if')
+  add_condition('input_source_unless')
+  add_condition('keyboard_type_if')
+  add_condition('variable_if')
+  add_condition('variable_unless')
 
-Consult the Karabiner documenation for more information on conditions. Once the conditions
-are created, you can add data to them using methods. See the documenation for each of the type of
-conditions and the types of methods they use:
+Once the conditions are created, you can add data with additional methods.
+See the additional documenation for these methods and the arguments they accept:
 
 L<JSON::Karabiner::Manipulator::Conditions>
 
-=head4 add_parameter($name, $value) DEPRECATED
+Consult the Karabiner documentation to understand how they modifty the behavior
+of the actions.
+
+=head2 add_parameter($name, $value)
 
 Parameters are used by Karabiner to change various timing aspects of the actions. Four
 different parameters may be set:
 
-  $manip->add_parameter('to_if_alone_timeout_milliseconds', 500);
-  $manip->add_parameter('to_if_held_down_threshold_milliseconds, 500);
-  $manip->add_parameter('to_delayed_action_delay_milliseconds, 250);
-  $manip->add_parameter('simultaneous_threshold_milliseconds, 50);
+  add_parameter('to_if_alone_timeout_milliseconds', 500);
+  add_parameter('to_if_held_down_threshold_milliseconds, 500);
+  add_parameter('to_delayed_action_delay_milliseconds, 250);
+  add_parameter('simultaneous_threshold_milliseconds, 50);
 
 See the Karabiner documentation for more details.
 
-=head4 add_description($description) DEPRECATED
+=head2 add_description($description)
 
 Adds a description to the manipulator data structure:
 
-  $manip->add_description('This turns a period into a hyper key.');
+  add_description('This turns a period into a hyper key.');
+
+This description is not visible inside Karabiner-Elements apps.
+
+=head2 write_file($title)
+
+Example usage:
+
+  write_file('My Hotkeys');
+
+This method outputs the most recently created manipulator object to the file
+set by the manipulator. If other manipulators exist in your script and share
+the same file name, they will be merged together into the same file.
+
+This method will overwrite pre-existing files with the same name without
+warning, so be sure the file name is unique if you don't want this to happen.
+
+The title is a require field, but only for the first manipulator saved. If the
+title is left blank for later manipulators, they will share the same title as
+the first. This allows you to group manipulators under the same title in the
+Karabiner-Elements interface.
 
 =head1 Development Status
 
