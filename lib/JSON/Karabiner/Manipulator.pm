@@ -214,7 +214,7 @@ sub write_file {
   my $rule = $kb_obj->add_rule($little_title);
   my $temp_manip = $rule->add_manipulator();
   %{$temp_manip} = %{$s};
-  $kb_obj->write_file(1);
+  $kb_obj->write_file();
   $kb_obj->{_fake_write_flag} = 0;
   {
     no warnings 'once';
