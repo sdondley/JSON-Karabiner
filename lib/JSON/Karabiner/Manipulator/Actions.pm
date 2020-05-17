@@ -47,14 +47,6 @@ sub _is_exclusive {
   $s->{$property} = 1;
 }
 
-sub TO_JSON {
-  my $obj = shift;
-  my $name = $obj->{def_name};
-  my $value = $obj->{data};
-  return { $name => $value };
-
-  # return { %{ shift() } };
-}
 
 # ABSTRACT: parent class for action classes
 
