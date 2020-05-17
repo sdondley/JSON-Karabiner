@@ -394,7 +394,7 @@ modules](https://www.cpan.org/modules/INSTALL.html) for more information.
 
 # VERSION
 
-version 0.015
+version 0.016
 
 # Development Status
 
