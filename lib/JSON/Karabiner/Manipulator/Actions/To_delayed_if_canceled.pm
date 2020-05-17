@@ -15,8 +15,6 @@ sub new {
   }
   my $obj;
   if ($main::has_delayed_action) {
-    use Data::Dumper qw(Dumper);
-    print Dumper 'kajskfj';
     $obj = $main::has_delayed_action;
   } else {
     $obj = $class->SUPER::new('to_delayed_action', $value);
