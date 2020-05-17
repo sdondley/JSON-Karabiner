@@ -50,6 +50,7 @@ sub _fake_write_file {
 }
 
 sub write_file {
+
   my $s = shift;
   my $using_dsl = ((caller(0))[0] eq 'JSON::Karabiner::Manipulator');
   my $file = $s->{_file};
@@ -58,16 +59,31 @@ sub write_file {
 
   if ($using_dsl) {
     my $rule = $s->{_karabiner}{rules};
-    if (!@main::saved_manips) {
-      @main::saved_manips = ();
+    if (!%main::saved_manips) {
+      %main::saved_manips = ();
+      { no warnings 'once'; $main::last_manip_set = ''; }
     }
     foreach my $r (@$rule) {
+      my $current_manip_set = $r->{description};
+      { no warnings 'once'; $main::manip_sets{$current_manip_set}{description} = $current_manip_set; }
+      if (! defined $main::manip_sets{$current_manip_set}{manipulators}) {
+        $main::manip_sets{$current_manip_set}{manipulators} = [];
+      }
       foreach my $manip ($r->{manipulators}) {
         push @main::saved_manips, @{$manip};
+        push @{$main::manip_sets{$current_manip_set}{manipulators}}, @{$manip};
       }
     }
 
-    @{$s->{_karabiner}->{rules}[0]{manipulators}} = @main::saved_manips;
+    my $count = 0;
+    foreach my $k (keys %main::manip_sets) {
+      my $manipulators = $main::manip_sets{$k}{manipulators};
+      my $description = $main::manip_sets{$k}{description};
+      my $new_hash = { manipulators => $manipulators, description => $description };
+      $s->{_karabiner}->{rules}[$count++] = $new_hash;
+
+    }
+
   }
   my $json = $s->_get_json();
 
@@ -85,7 +101,7 @@ sub _get_json {
   my $s = shift;
   my $json = JSON->new();
   $json = $json->convert_blessed();
-  return $json->pretty->encode($s->{_karabiner});
+  return $json->canonical->pretty->encode($s->{_karabiner});
 }
 
 sub add_rule {
