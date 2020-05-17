@@ -106,9 +106,9 @@ sub add_set_variable {
   my $s = shift;
   $s->_is_exclusive('set_variable');
   my $name = shift;
-  croak 'No name passed' unless $name;
+  croak 'No name passed' unless defined $name;
   my $value = shift;
-  croak 'No value passed' unless $value;
+  croak 'No value passed' unless defined $value;
 
   my %hash;
   $hash{set_variable}{name} = $name;
@@ -122,7 +122,7 @@ sub add_mouse_key {
   my $name = shift;
   croak 'No name passed' unless $name;
   my $value = shift;
-  croak 'No value passed' unless $value;
+  croak 'No value passed' unless defined $value;
 
   #TODO: make sure $names have not been set already
   #TODO: make sure names are valid

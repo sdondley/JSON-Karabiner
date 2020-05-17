@@ -9,16 +9,22 @@ use parent 'JSON::Karabiner::Manipulator::Actions::To';
 sub new {
   my $class = shift;
   my ($type, $value) = @_;
-  my $obj = $class->SUPER::new('to_delayed_action', $value);
+  my $obj;
+  if ($main::has_delayed_action) {
+    $obj = $main::has_delayed_action;
+  } else {
+    $obj = $class->SUPER::new('to_delayed_action', $value);
+    $obj->{data} = {};
+  }
   $obj->{delayed_type} = 'invoked';
   if ($value) {
     $obj->{data} = $value,
   } else {
-    $obj->{data} = {};
     $obj->{data}{to_if_invoked} = [];
 
 #    $obj->{data}{to_delayed_action}{to_if_invoked} = [];
   }
+  $main::has_delayed_action = $obj;
   return $obj;
 }
 
@@ -27,4 +33,3 @@ sub new {
 1;
 
 __END__
-

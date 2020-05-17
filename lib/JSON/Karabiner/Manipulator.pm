@@ -35,7 +35,6 @@ sub new_manipulator {
 
 sub AUTOLOAD {
   our $AUTOLOAD;
-  use Data::Dumper qw(Dumper);
   my $program = $AUTOLOAD;
   my ($func) = $program =~ /.*::(.*)$/;
   my @action_functions = qw (add_key_code add_any add_optional_modifiers add_mandatory_modifiers add_simultaneous add_simultaneous_options add_consumer_key_code add_pointing_button add_shell_command add_select_input_source add_set_variable add_mouse_key add_modifiers);

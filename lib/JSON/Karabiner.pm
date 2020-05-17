@@ -37,6 +37,7 @@ sub new {
     }
   }
   bless $self, $class;
+  { no warnings 'once'; $main::has_delayed_action = ''; }
   return $self;
 }
 
@@ -65,8 +66,6 @@ sub write_file {
         push @main::saved_manips, @{$manip};
       }
     }
-    use Data::Dumper qw(Dumper);
-    print Dumper $s->{_karabiner}->{rules}[0];
 
     @{$s->{_karabiner}->{rules}[0]{manipulators}} = @main::saved_manips;
   }
