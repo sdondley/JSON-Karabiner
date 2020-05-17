@@ -30,7 +30,7 @@ sub run_to_tests {
   lives_ok { $def->add_key_code('i-200') } 'can add "hold down time" to key codes';
   lives_ok { $def->add_key_code('i', 'k', 'j', 'x') } 'can add multiple key codes';
   lives_ok { $def->add_pointing_button('bazinga') } 'can add pointing_button';
-  lives_ok { $def->add_consumer_key_code('bazinga') } 'can add pointing_button';
+  lives_ok { $def->add_consumer_key_code('bazinga') } 'can add consumer key code';
   dies_ok { $def->add_any('bazinga') } 'cannot add any';
   $obj->_dump_json;
   ($obj, $def) = gen_def($type);
