@@ -117,7 +117,7 @@ sub _dump_json {
   $s->{_rule_object}->_disable_validity_tests();
 
   use Data::Dumper qw(Dumper);
-  print Dumper $json->pretty->encode($s->{_karabiner});
+  print Dumper $json->canonical->pretty->encode($s->{_karabiner});
 
   # renable validity tests
   $s->{_rule_object}->_enable_validity_tests();
