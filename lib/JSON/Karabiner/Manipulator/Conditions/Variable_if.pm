@@ -21,6 +21,9 @@ sub add_variable {
   croak 'A variable name is required' unless $name;
   croak 'A value for the varaible name is required' unless $value;
   #TODO: Validates keys
+  if ($value =~ /^\d+$/) {
+    $value = $value + 0;
+  }
   $s->{data}{name} = $name;
   $s->{data}{value} = $value;
 

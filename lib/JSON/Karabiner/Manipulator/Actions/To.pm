@@ -110,6 +110,10 @@ sub add_set_variable {
   my $value = shift;
   croak 'No value passed' unless defined $value;
 
+  if ($value =~ /^\d+$/) {
+    $value = $value + 0;
+  }
+
   my %hash;
   $hash{set_variable}{name} = $name;
   $hash{set_variable}{value} = $value;
