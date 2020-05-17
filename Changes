@@ -1,5 +1,10 @@
 Revision history for JSON-Karabiner
 
+0.016 - 0.014
+  - major bug fixes
+  - documentation for new DSL
+  - removal of older documentation
+
 0.013
   - doc improvements
 
