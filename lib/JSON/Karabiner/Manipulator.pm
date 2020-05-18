@@ -6,7 +6,7 @@ use Carp;
 use Exporter;
 our @EXPORT = qw'new_manipulator add_action add_description add_condition add_parameter add_key_code
   add_key_code add_any add_optional_modifiers add_mandatory_modifiers add_simultaneous add_simultaneous_options add_consumer_key_code add_pointing_button add_shell_command add_select_input_source add_set_variable add_mouse_key add_modifiers
-  add_identifier add_description add_value add_bundle_identifiers add_file_path add_input_source add_keyboard_types add_variable add_description _dump_json _fake_write_file write_file set_filename set_title set_rule_name';
+  add_identifier add_description add_value add_bundle_identifiers add_file_path add_input_source add_keyboard_types add_variable add_description _dump_json _fake_write_file write_file set_filename set_title set_rule_name set_save_dir';
 
 sub import {
   strict->import;
@@ -35,11 +35,18 @@ sub new_manipulator {
       $program_name =~ s/^.*[\/\\]//;
       $program_name =~ s/\..*$//;
       $program_name = "$program_name.json";
-      push @kb_obj_args, $main::rule_name;
       push @kb_obj_args, $program_name;
       $main::save_to_file_name = $program_name;
     } else {
-      push @kb_obj_args, ($main::rule_name, $main::save_to_file_name) if $main::save_to_file_name;
+      push @kb_obj_args, $main::save_to_file_name if $main::save_to_file_name;
+    }
+
+    if ($called_directly) {
+      unshift @kb_obj_args, $main::rule_name if $main::rule_name;
+      my $save_to_dir = $main::save_to_dir;
+      if ($save_to_dir) {
+        push @kb_obj_args, { mod_file_dir => $save_to_dir };
+      }
     }
   }
 
@@ -67,6 +74,14 @@ sub set_filename {
   }
 
   $main::save_to_file_name = $fn;
+}
+
+sub set_save_dir {
+  my $sd = shift;
+  croak 'You must pass a file name' unless $sd;
+  { no warnings 'once';
+    $main::save_to_dir = $sd;
+  }
 }
 
 sub set_title {
@@ -244,7 +259,16 @@ sub _dump_json {
 
 sub write_file {
   my $s = $main::current_manip;
+  shift if $_[0] && (ref $_[0]) =~ /^JSON::Karabiner::Manipulator$/;
   my $title = shift;
+
+  my $filename;
+  if ($title && $title =~ /\.json$/) {
+    $filename = $title;
+  } else {
+    $filename = shift || $main::save_to_file_name || $main::file_written;
+  }
+
   my @kb_obj_args = @{$s->{_kb_obj_args}};
   if (!@kb_obj_args) {
     croak "The _write_file method cannot be run on this manipulator.";
@@ -258,6 +282,8 @@ sub write_file {
   require JSON::Karabiner;
   my $little_title = shift @kb_obj_args;
   unshift @kb_obj_args, $title;
+  $kb_obj_args[1] = $filename;
+
   my $kb_obj = JSON::Karabiner->new( @kb_obj_args );
   if ($s->{_fake_write_flag}) {
     $kb_obj->{_fake_write_flag} = 1;
@@ -278,6 +304,7 @@ sub write_file {
 sub _fake_write_file {
   my $s = $main::current_manip;
   my $title = shift;
+  my $file_name = shift;
 
   my @kb_obj_args = @{$s->{_kb_obj_args}};
   if (!@kb_obj_args) {
@@ -285,7 +312,7 @@ sub _fake_write_file {
   }
 
   $s->{_fake_write_flag} = 1;
-  $s->write_file($title);
+  $s->write_file($title, $file_name);
   $s->{_fake_write_flag} = 0;
 }
 
@@ -305,9 +332,7 @@ sub _do_from_validity_checks {
 
 #  my @from_keys = keys %$from;
 #  my $has_key_code = grep { $_ =~ /^any|consumer_key_code|key_code$/ } @from_keys;
-#  print Dumper \@from_keys;
 #  if (!$has_key_code && grep { $_ =~ /modifiers/ } @from_keys) {
-#    print Dumper 'aksjdkajsdf';
 #    croak "You cannot have modifiers without anything to modify in a 'from' action.";
 #  }
 }
