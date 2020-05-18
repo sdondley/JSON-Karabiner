@@ -222,9 +222,12 @@ asssistance.
   #!/usr/bin/env perl                # shebang line so this program is opened with perl interpreter
   use JSON::Karabiner::Manipulator;  # The JSON::Karabiner Perl package must be installed on your machine
 
-  # Create a new manipulator object with a description and the file you want to save it to
-  set_title('Emoji Character Viewer');
-  new_manipulator('a-s-d to show character viewer');
+  # Set up required meta data about the rules:
+  set_title 'Emoji Character Viewer';              # the name for your group of manipulators
+  set_rule_name 'a-s-d to show character viewer';  # the name of the rule for your manipulators
+
+  # You must add at least one manipulator:
+  new_manipulator;
 
   # Add a from action to the manipulator:
   add_action 'from';
@@ -240,16 +243,16 @@ asssistance.
   add_key_code('spacebar');
   add_modifiers('control', 'command');
 
-  # Done! Now it's time to write the file and give the rule a title:
+  # Done! Now it's time to write the file out
   write_file;
 
 Save this code to a file on your computer and be sure to make the script executable with:
 
-  chmod 744 your_file_name.pl
+  chmod 744 my_awesome_karabiner_mod.pl
 
 Then execute this script with:
 
-  ./your_file_name.pl
+  ./my_awesome_karabiner_mod.pl
 
 from the same directory where this script is saved.
 
@@ -442,67 +445,89 @@ please see the appropriate perl doc page:
 The DSL interface makes it easy to include multiple manipulator in a single rule.
 Follow this patter:
 
-  new_manipulator('Turn x key into y key', 'name_of_file.json');
+  set_title 'Group heading for all rules';
+  set_rule_name 'My first rule';
+  new_manipulator;
 
   ... Run methods for above manipulator here ...
 
-  write_file('Name of Rule');
 
-  new_manipulator('Turn a key into by key', 'name_of_file.json');
+  new_manipulator;
 
   ... Run methods for the second manipulator here ...
 
-  write_file('');
+  set_rule_name 'My second rule';
+  new_manipulator
 
   ... Add N more manipulators here ...
 
-Just be sure the manipulators all have the same file name so they will be
-included in the same file.
+  # Afer all the maniuplators have been added:
+  write_file;
 
-Notice that only the first C<write_file> method requires the name of the rule
-to be passed. Subsequent calls to C<write_file> will inherit the title from
-the first manipulator written.
+All the manipulators will be added to the same file name.
+
+Notice that you can group multiple manipulators under the same rule name. A new
+manipulator that is added will inherit the rule name of the last rule name set
+with the C<set_rule_name> method.
 
 =head3 Writing to the JSON file
 
-As shown in the example above, a C<write_file> call must be made for each
-manipulator in your script to have it included in the JSON file. The title is
-required to be supplied to the first manipulator. Subsequent C<write_file>
-calls will use the first title.
+As shown in the example above, a C<write_file> call must be made
+to write out your JSON file.
 
 =head1 METHODS
 
-=head2 new_manipulator($maniuplator_description, $file_name, [ { mod_file_dir => '/path_/to/dir' } ])
+=head2 set_filename($filename)
+
+This method override the default setting for the name of the .json file where
+the script will save the generated json code. By default, the .json file will
+share the same file prefix of your script name. So if your script is named
+C<my_script.pl>, the json file will be named C<my_script.json>.
 
 Example usage:
 
-  new_manipulator 'Double tap shift for ⌘-f', 'double-taps.json', { mod_file_dir => '/some/dir' };
+  set_filename 'some_filename.json'
+
+If you do not provide the .json file extension, it will be automatically attached
+for you.
+
+=head2 set_save_dir($directory_path)
+
+This mehtod is only needed if you have Karabiner-Elements installed in a non-standard
+directory and you need to override the default of C<~/.config/karabiner/assets/complex_modifications>.
+
+Example usage:
+
+  set_save_dir '/custom/path/to/complex_modifications'
+
+=head2 set_title($rule_title)
+
+This sets the rule title your manipulators are grouped under. It is used by Karabiner-Elements
+to organize your rules in the graphical user interface.
+
+Example usage:
+
+  set_title 'My Favorite Rules'
+
+=head2 set_rule_name($rule_name)
+
+Manipulators are assinged to individual rule names. These rule names, or descritpions,
+are grouped under the rule title. You can have many manipulators assigned to one rule
+name. Newly create manipulators are assigned to the last rule name set with the
+C<set_rule_method>.
+
+Example usage:
+
+  set_rule_name 'Double tap left shift to swipe right'
+
+=head2 new_manipulator()
+
+Example usage:
+
+  new_manipulator;
 
 This method creates a new manipulator. It must be called before adding
-actions, condtisions and parameters. The method takes two required arguments: a
-description of the manipulator and the name of the file you with to save it to.
-A third argument for passing options to the maniplator, is optional.
-
-=head3 Manipulator description
-
-The description will be displayed in the Karabiner-Elements application. The
-description is used to let you know which rule is getting enabled/disabled. You
-should be descriptive here.
-
-=head3 File name
-
-This is the name of the file your manipulator will be saved in. If this file name
-is the same for other manipulators, those manipulators will be stored together
-in the same file. This file should end with the ".json" file extension.
-
-=head3 Options
-
-Only one option is available, C<mod_file_dir>. This is needed only if you want to
-save your json file to a place other than the default, C<~/.config/karabiner/assets/complex_modifications>.
-
-Note that options are passed as an anonymous has reference. What this means
-to you is that you have to place this option inside curly braces per the example
-above.
+actions, conditions and parameters.
 
 =head2 add_action($type)
 
@@ -516,7 +541,7 @@ There are seven different types of actions you can add:
   add_action('to_delayed_if_invoked');
   add_action('to_delayed_if_canceled');
 
-The most frequently uses actions are the first four listed above. You must create a C<from> action to
+The most frequently used actions are the first four listed above. You must create a C<from> action to
 your manipulator. The C<from> action contains the keystrokes you want to modify.
 The other C<to> actions describe what the C<from> keystroke actions will be changed
 into. See the Karabiner documentation for more information on these actions.
@@ -577,23 +602,27 @@ Adds a description to the manipulator data structure:
 
 This description is not visible inside Karabiner-Elements apps.
 
-=head2 write_file($title)
+=head2 write_file([$title], [$filename])
+
+This method writes all the manipulators objects out to the .json file.
 
 Example usage:
 
-  write_file('My Hotkeys');
+  write_file 'My Hotkeys', 'my_file.json';
 
-This method outputs the most recently created manipulator object to the file
-set by the manipulator. If other manipulators exist in your script and share
-the same file name, they will be merged together into the same file.
+  # or, even better:
+  write_file; # title and file name must have been already set with the "set_title"
+              # and "set_filename" methods to run this method without arguments
 
 This method will overwrite pre-existing files with the same name without
 warning, so be sure the file name is unique if you don't want this to happen.
 
-The title is a require field, but only for the first manipulator saved. If the
-title is left blank for later manipulators, they will share the same title as
-the first. This allows you to group manipulators under the same title in the
-Karabiner-Elements interface.
+The title method is not required if it has already been set with the
+C<set_title> method, otherwise it is required. The C<$filename> argument is
+always optional and will default to the what was set with C<set_filename> or, if
+that method wasn't used, than the filename will inherit the prefix from the
+name of the script. The .json extension is required for this
+method and cannot be omitted.
 
 =head1 Development Status
 
