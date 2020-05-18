@@ -14,7 +14,7 @@ sub new {
   return $obj;
 }
 
-# ABSTRACT: to_if_alone action
+# ABSTRACT: to_after_key_up action
 
 1;
 

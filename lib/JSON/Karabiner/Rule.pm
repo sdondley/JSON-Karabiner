@@ -43,7 +43,7 @@ sub add_manipulator {
 sub TO_JSON { return { %{ shift() } }; }
 
 
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: Rule object for holding manipulators
 
 1;
 
@@ -52,7 +52,14 @@ __END__
 
 =head1 DESCRIPTION
 
-Please see the L<JSON::Karabiner> for more thorough documentation of these module.
-Methods are listed below for reference purposes only.
+Please see the L<JSON::Karabiner> for thorough documentation.
+Methods are listed below for technical reference purposes only.
+
+=head3 new()
+
+For use with legacy OO interface, unused by DSL interface
 
 =head3 add_manipulator()
+
+For use with legacy OO interface, unused by DSL interface
+

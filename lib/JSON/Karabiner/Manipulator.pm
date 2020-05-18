@@ -337,7 +337,7 @@ sub _do_from_validity_checks {
 #  }
 }
 
-# ABSTRACT: manipulator object for containing and outputting its data
+# ABSTRACT: manipulator object for containing and outputting json data to file
 
 1;
 
@@ -345,15 +345,25 @@ __END__
 
 =head1 DESCRIPTION
 
-Please see the L<JSON::Karabiner> for more thorough documentation of this module.
-Methods are listed below for reference purposes only.
+Please see the L<JSON::Karabiner> for thorough documentation of this module.
+Methods are listed below for tecnical reference purposes only.
 
-=head3 new()
+=head2 new_manipulator()
 
-=head3 add_action($type)
+=head2 add_action($type)
 
-=head3 add_condition($type)
+=head2 add_condition($type)
 
-=head3 add_parameter($name, $value)
+=head2 add_parameter($name, $value)
 
-=head3 add_description($description)
+=head2 add_description($description)
+
+=head2 set_filename($filename)
+
+=head2 set_rule_name($rule_name)
+
+=head2 set_save_dir($save_dir)
+
+=head2 set_title($title)
+
+=head2 write_file([$title], [$filename]);

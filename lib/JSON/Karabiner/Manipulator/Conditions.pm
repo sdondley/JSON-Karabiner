@@ -37,7 +37,7 @@ sub TO_JSON {
 
 }
 
-# ABSTRACT: turns baubles into trinkets
+# ABSTRACT: parent class for condition classes
 
 1;
 
@@ -65,42 +65,42 @@ See the example in the Synopsis above.
 
   add_identifier('vendor_id' => 5, 'product_id' => 2222);
   add_identifier('vendor_id' => 6, 'product_id' => 2223);
-  add_description('some description');
+  add_description 'some description';
 
 See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/device/>
 
 =head3 'event_changed_if' and 'event_chaned_unless'
 
-  add_value( 'true' );
-  add_description('some description');
+  add_value 'true' ;
+  add_description 'some description';
 
 See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/event-changed/>
 
 =head3 'frontmost_application_if' and 'frontmost_application_unless'
 
-  add_bundle_identifiers( 'bundle_id_one', 'bundle_id_two');
-  add_file_paths( 'file_path1', 'file_path2');
-  add_description('some description');
+  add_bundle_identifiers 'bundle_id_one', 'bundle_id_two';
+  add_file_paths 'file_path1', 'file_path2';
+  add_description 'some description';
 
 See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/frontmost-application/>
 
 =head3 'input_source_if', and 'input_source_unless'
 
-  add_input_source('language' => 'languare regex', 'input_source_id' => 'input source id regex');
-  add_input_source('language' => 'languare regex', 'input_source_id' => 'input source id regex');
-  add_description('some description');
+  add_input_source ('language' => 'languare regex', 'input_source_id' => 'input source id regex');
+  add_input_source ('language' => 'languare regex', 'input_source_id' => 'input source id regex');
+  add_description 'some description';
 
 See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/input-source/>
 
 =head3 'keyboard_type_if', and 'keyboard_type_unless'
 
-  add_keyboard_types('keybd_type1', 'keybd_type2')
-  add_description('some description')
+  add_keyboard_types 'keybd_type1', 'keybd_type2'
+  add_description 'some description'
 
 SeE L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/keyboard-type/>
 
 =head3 'variable_if', and 'variable_unless'
 
-  add_variable('variable_name' => 'value');
+  add_variable 'variable_name' => 'value';
 
 See L<Karabiner official documentation|https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/conditions/variable/>

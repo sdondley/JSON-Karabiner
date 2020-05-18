@@ -14,7 +14,7 @@ sub new {
   return $obj;
 }
 
-# ABSTRACT: to_if_alone action
+# ABSTRACT: to_if_held_down action
 
 1;
 
