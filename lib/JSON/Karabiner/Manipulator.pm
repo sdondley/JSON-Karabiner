@@ -6,7 +6,7 @@ use Carp;
 use Exporter;
 our @EXPORT = qw'new_manipulator add_action add_description add_condition add_parameter add_key_code
   add_key_code add_any add_optional_modifiers add_mandatory_modifiers add_simultaneous add_simultaneous_options add_consumer_key_code add_pointing_button add_shell_command add_select_input_source add_set_variable add_mouse_key add_modifiers
-  add_identifier add_description add_value add_bundle_identifiers add_file_path add_input_source add_keyboard_types add_variable add_description _dump_json _fake_write_file write_file';
+  add_identifier add_description add_value add_bundle_identifiers add_file_path add_input_source add_keyboard_types add_variable add_description _dump_json _fake_write_file write_file set_filename set_title set_rule_name';
 
 sub import {
   strict->import;
@@ -15,10 +15,35 @@ sub import {
 }
 
 sub new_manipulator {
+  my @caller = caller(0);
+  my $called_directly = $caller[0] eq 'main' ? 1 : 0;
+  if ($main::current_manip && $called_directly) {
+    write_file($main::file_title_written);
+  }
   my $class = 'JSON::Karabiner::Manipulator';
-  shift if $_[0] =~ /^JSON::Karabiner::Manipulator$/;
+
+  # trash the first arg if this is using the old school OO interface
+  shift if $_[0] && $_[0] =~ /^JSON::Karabiner::Manipulator$/;
 
   my @kb_obj_args = @_;
+
+  # derive the filename from the called script
+  { no warnings 'once';
+    if (!$main::save_to_file_name && $called_directly) {
+
+      my $program_name = $0;
+      $program_name =~ s/^.*[\/\\]//;
+      $program_name =~ s/\..*$//;
+      $program_name = "$program_name.json";
+      push @kb_obj_args, $main::rule_name;
+      push @kb_obj_args, $program_name;
+      $main::save_to_file_name = $program_name;
+    } else {
+      push @kb_obj_args, ($main::rule_name, $main::save_to_file_name) if $main::save_to_file_name;
+    }
+  }
+
+
   my $self = {
     actions => {},
     _disable_validity_tests => 0,
@@ -31,6 +56,33 @@ sub new_manipulator {
     $main::current_manip = $self;
   }
   return $self;
+}
+
+sub set_filename {
+  my $fn = shift;
+  croak 'You must pass a file name' unless $fn;
+
+  if ($fn !~ /\.json$/) {
+    $fn = $fn . '.json';
+  }
+
+  $main::save_to_file_name = $fn;
+}
+
+sub set_title {
+  my $title = shift;
+  croak 'You must pass a file name' unless $title;
+
+  $main::file_title_written = $title;
+}
+
+sub set_rule_name {
+  my $rule_name = shift;
+  croak 'You must pass a rule name' unless $rule_name;
+
+  { no warnings 'once';
+    $main::rule_name = $rule_name;
+  }
 }
 
 sub AUTOLOAD {
@@ -198,7 +250,7 @@ sub write_file {
     croak "The _write_file method cannot be run on this manipulator.";
   }
 
-  croak 'You must supply a title for the first manipulator' if !$title && !$main::file_written;
+  croak 'You must supply a title for the first manipulator' if !$title && !$main::file_title_written;
   if (!$title) {
     $title = $main::file_title_written;
   }

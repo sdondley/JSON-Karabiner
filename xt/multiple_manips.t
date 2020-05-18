@@ -1,21 +1,13 @@
 use Test::Most;
-use JSON::Karabiner;
+
 use strict;
 use warnings;
-do 'xt/utility_funcs.pl';
+
+do 'xt/utility_funcs.pl' or die 'Could not open utility_funcs';
 
 
+#my $script = '4_finger_swipes_new';
+#gets_output($script);
 
-
-
-
-
-
-
-
-
-my $tests = 1; # keep on line 17 for ,i (increment and ,d (decrement)
-plan tests => $tests;
-
-run_script('4_finger_swipes.pl');
-is 1, 1, 'can run';
+my $script = '4_finger_swipes_file_name';
+gets_output($script);

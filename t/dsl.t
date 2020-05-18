@@ -14,11 +14,12 @@ do 't/utility_funcs.pl';
 
 
 
-my $tests = 2; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 3; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
 
-lives_ok { new_manipulator('Manip 1 Title', 'file.json'); } 'can create a manipulator object directly';
+lives_ok { set_rule_name('big time'); } 'can set rule name';
+lives_ok { new_manipulator; } 'can create a manipulator object directly';
 add_action 'from';
 add_key_code 'x';
 
@@ -30,7 +31,7 @@ _dump_json;
 
 _fake_write_file('Some title');
 
-lives_ok { new_manipulator('Manip 2 Title', 'file.json'); } 'can add a new manipulator';
+lives_ok { new_manipulator; } 'can add a new manipulator';
 add_action 'from';
 add_key_code 'a';
 

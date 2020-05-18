@@ -14,12 +14,14 @@ do 't/utility_funcs.pl';
 
 
 
-my $tests = 14; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 16; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
 
 my $manip;
-lives_ok { $manip = new_manipulator('little title', 'file.json'); } 'can create a manipulator object directly';
+lives_ok { set_title 'some title' } 'can set title';
+lives_ok { set_rule_name 'some rule' } 'can set rule name';
+lives_ok { $manip = new_manipulator(); } 'can create a manipulator object directly';
 my $from;
 lives_ok { $from = $manip->add_action('from') } 'can add a from action';
 lives_ok { $from->add_key_code('t') } 'can add a from action';
@@ -29,7 +31,7 @@ lives_ok { add_key_code('x') } 'can use DSL for adding data to actions';
 dies_ok { add_nonsense('x') } 'does not run invalid methods';
 lives_ok { add_key_code 'y' } 'can use DSL without parens';
 
-lives_ok { $manip->_fake_write_file('A title') } 'can fake write a file with manipulator';
+lives_ok { $manip->_fake_write_file() } 'can fake write a file with manipulator';
 lives_ok { $manip->_dump_json; } 'can _dump_json with manipulator';
 
 

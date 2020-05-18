@@ -37,7 +37,10 @@ sub new {
     }
   }
   bless $self, $class;
-  { no warnings 'once'; $main::has_delayed_action = ''; }
+  { no warnings 'once';
+    $main::has_delayed_action = '';
+    $main::save_to_file_name = '';
+  }
   return $self;
 }
 
@@ -76,7 +79,7 @@ sub write_file {
     }
 
     my $count = 0;
-    foreach my $k (keys %main::manip_sets) {
+    foreach my $k (sort keys %main::manip_sets) {
       my $manipulators = $main::manip_sets{$k}{manipulators};
       my $description = $main::manip_sets{$k}{description};
       my $new_hash = { manipulators => $manipulators, description => $description };
@@ -94,7 +97,7 @@ sub write_file {
     close FH;
   }
 
-  print "Your rules were successfully written to:\n\n $destination.\n\nOpen Karabiner-Elements to import the new rules you have generated.\n\nIf your rules do not appear, please report the issue to our issue queue:\n\nhttps://github.com/sdondley/JSON-Karabiner/issues \n\n"
+  print "Your rules were successfully written to:\n\n $destination.\n\nOpen Karabiner-Elements to import the new rules you have generated.\n\nIf your rules do not appear, please report the issue to our issue queue:\n\nhttps://github.com/sdondley/JSON-Karabiner/issues \n\n" unless $ENV{HARNESS_ACTIVE};
 }
 
 sub _get_json {
@@ -220,7 +223,8 @@ asssistance.
   use JSON::Karabiner::Manipulator;  # The JSON::Karabiner Perl package must be installed on your machine
 
   # Create a new manipulator object with a description and the file you want to save it to
-  new_manipulator('a-s-d to show character viewer', 'my_awesome_karabiner_mod.json');
+  set_title('Emoji Character Viewer');
+  new_manipulator('a-s-d to show character viewer');
 
   # Add a from action to the manipulator:
   add_action 'from';
@@ -237,7 +241,7 @@ asssistance.
   add_modifiers('control', 'command');
 
   # Done! Now it's time to write the file and give the rule a title:
-  write_file('Emoji Character Viewer');
+  write_file;
 
 Save this code to a file on your computer and be sure to make the script executable with:
 
