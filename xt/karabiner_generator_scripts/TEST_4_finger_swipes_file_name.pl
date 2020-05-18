@@ -63,4 +63,4 @@ add_set_variable  'right_shift pressed', '0';
 add_action        'to_delayed_if_canceled';
 add_set_variable  'right_shift pressed', '0';
 
-write_file();
+write_file;

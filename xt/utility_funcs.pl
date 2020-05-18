@@ -12,8 +12,6 @@ sub run_script {
   my $script = shift;
 
   my $script_path = $script_dir . $script;
-  use Data::Dumper qw(Dumper);
-  print Dumper $script_path;
   croak "Could not find script file: $script_path" unless -f $script_path;
   my $failed = system($script_dir . $script);
   croak "Failed to run generator script: $?" if $failed;

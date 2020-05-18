@@ -14,7 +14,7 @@ do 't/utility_funcs.pl';
 
 
 
-my $tests = 3; # keep on line 17 for ,i (increment and ,d (decrement)
+my $tests = 4; # keep on line 17 for ,i (increment and ,d (decrement)
 
 plan tests => $tests;
 
@@ -27,9 +27,9 @@ add_key_code 'x';
 add_action 'to';
 add_key_code 'y';
 
-_dump_json;
+#_dump_json;
 
-_fake_write_file('Some title');
+lives_ok { _fake_write_file('Some title', 'some.json')} 'can fake write file with file name';
 
 lives_ok { new_manipulator; } 'can add a new manipulator';
 add_action 'from';
@@ -38,6 +38,6 @@ add_key_code 'a';
 add_action 'to';
 add_key_code 'b';
 
-_dump_json;
+#_dump_json;
 
 _fake_write_file();
