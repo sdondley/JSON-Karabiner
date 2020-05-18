@@ -443,7 +443,7 @@ please see the appropriate perl doc page:
 =head3 Multiple manipulators
 
 The DSL interface makes it easy to include multiple manipulator in a single rule.
-Follow this patter:
+Follow this pattern:
 
   set_title 'Group heading for all rules';
   set_rule_name 'My first rule';
@@ -472,8 +472,8 @@ with the C<set_rule_name> method.
 
 =head3 Writing to the JSON file
 
-As shown in the example above, a C<write_file> call must be made
-to write out your JSON file.
+As shown in the example above, a C<write_file> is called to write out your JSON
+file.
 
 =head1 METHODS
 
