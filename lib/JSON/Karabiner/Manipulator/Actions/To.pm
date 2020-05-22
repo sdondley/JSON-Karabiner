@@ -44,7 +44,7 @@ sub add_key_code {
     my %hash;
     my $letter_code;
     my $ms;
-    if ($key_code =~ /-([A-Z])|(\d+)$/) {
+    if ($key_code =~ /-([A-Z])|-(\d+)$/) {
       $letter_code = $1;
       $ms = $2;
       $key_code =~ s/-(.*?)$//;
