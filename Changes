@@ -1,5 +1,9 @@
 Revision history for JSON-Karabiner
 
+{{$NEXT}}
+  - Bug fix for #2
+  - Throw bones to smoke test gods
+
 0.018
   - Minor documentation tweaks and updates
 
