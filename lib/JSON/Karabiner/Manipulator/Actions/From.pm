@@ -35,7 +35,7 @@ sub add_key_code {
     croak 'Only one input type can be entered for "from" defintions';
   }
   my ($letter_code, $ms);
-  if ($key_codes[0] =~ /-([A-Z])|(\d+)$/) {
+  if ($key_codes[0] =~ /-([A-Z])|(\d\{2,\})$/) {
     $letter_code = $1;
     $ms = $2;
   }
