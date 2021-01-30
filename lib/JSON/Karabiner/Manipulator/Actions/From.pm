@@ -35,7 +35,7 @@ sub add_key_code {
     croak 'Only one input type can be entered for "from" defintions';
   }
   my ($letter_code, $ms);
-  if ($key_codes[0] =~ /-([A-Z])|(\d+)$/) {
+  if ($key_codes[0] =~ /-([A-Z])|(\d\{2,\})$/) {
     $letter_code = $1;
     $ms = $2;
   }
@@ -95,16 +95,20 @@ sub add_simultaneous_options {
   my @values = @_;
   my @allowed_options = qw ( detect_key_down_uninterruptedly
                              key_down_order key_up_when to_after_key_up );
-  my $exists = grep { $_ = $option } @allowed_options;
-  croak "Simultaneous option is not a valid option" if $exists;
+  my $exists = grep { $_ eq $option } @allowed_options;
+  croak "Simultaneous option $option is not a valid option" unless ($exists == 1);
   my $value = $values[0];
 
   #TODO: detect if option already exists and die if it does
   #TODO: offer suggestions if error thrown
-  croak "Simultaneous option $option has already been set" if ($s->{"so_${option}_is_set"} == 1);
+  croak "Simultaneous option $option has already been set" if $s->{"so_${option}_is_set"};
 
   if ($option eq 'detect_key_down_uninterruptedly') {
-    if ($value !~ /true|false/) {
+    if ($value =~ /true/) {
+      $value = $JSON::true;
+    } elsif ($value =~ /false/) {
+      $value = $JSON::false;
+    } else {
       croak "$value is not a valid option for $option";
     }
   } elsif ($option eq 'key_down_order' || $option eq 'key_up_order') {
@@ -120,8 +124,13 @@ sub add_simultaneous_options {
     croak 'This option is currently unspported by JSON::Karabiner';
   }
 
-  $s->{"so_${option}_is_set"} = 1;
+  if (defined $s->{data}{simultaneous_options}) {
+    %{$s->{data}{simultaneous_options}} = (%{$s->{data}{simultaneous_options}}, $option => $value);
+  } else {
+    $s->{data}{simultaneous_options} = { $option => $value };
+  }
 
+  $s->{"so_${option}_is_set"} = 1;
 }
 
 # ABSTRACT: From object definition
